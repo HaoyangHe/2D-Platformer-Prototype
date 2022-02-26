@@ -15,7 +15,6 @@ public class PlayerBashState : PlayerAbilityState
     private bool isGrounded;
     private bool isTouchingWall;
     private bool bashInputStop;
-    private bool isGoingBackward;
 
     public PlayerBashState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName)
         : base(player, stateMachine, playerData, animBoolName)
@@ -40,7 +39,6 @@ public class PlayerBashState : PlayerAbilityState
 
         bashDirction = player.FacingDirection * Vector2.one;
         isHolding = true;
-        isGoingBackward = false;
         CanBash = false;
         WasBash = true;
     }
@@ -51,12 +49,7 @@ public class PlayerBashState : PlayerAbilityState
 
         player.RB2D.drag = 0.0f;
 
-        if (isGoingBackward)
-        {
-            player.SetVelocityX(player.CurrentVelocity.x * playerData.backwardVelocityMultiplier);
-            player.SetVelocityY(player.CurrentVelocity.y * playerData.backwardVelocityMultiplier);
-        }
-        else if (player.CurrentVelocity.y > playerData.endBashMaxYVelocity)
+        if (player.CurrentVelocity.y > playerData.endBashMaxYVelocity)
         {
             player.SetVelocityY(player.CurrentVelocity.y * playerData.endBashYUpMultiplier);
         }
@@ -89,13 +82,13 @@ public class PlayerBashState : PlayerAbilityState
                     Time.timeScale = 1.0f;
                     startTime = Time.time;
 
-                    if (xInput * bashDirction.x < 0)
-                    {
-                        isGoingBackward = true;
-                    }
-                    else 
+                    if (xInput * bashDirction.x >= 0)
                     {
                         player.CheckIfShouldFlip(bashDirction.x > 0 ? 1 : -1);
+                    }
+                    else
+                    {
+                        player.CheckIfShouldFlip(xInput > 0 ? 1 : -1);
                     }
 
                     player.transform.position = player.BashAbleObj.Transform.position;

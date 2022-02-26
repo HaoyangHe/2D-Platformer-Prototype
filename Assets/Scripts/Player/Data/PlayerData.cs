@@ -56,7 +56,6 @@ public class PlayerData : ScriptableObject
     public float bashDrag = 10.0f;
     public float endBashMaxYVelocity = 20.0f;
     public float endBashYUpMultiplier = 0.7f;
-    public float backwardVelocityMultiplier = 0.5f;
     public float distBetweenAfterImages = 0.8f;
 
     [Header("Check Variables")]
