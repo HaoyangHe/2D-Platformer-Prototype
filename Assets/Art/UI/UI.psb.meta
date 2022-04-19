@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: eaf1bd0713e18b8479e3439b7e28b870
+guid: 3a586eed816506f4cba4349f055e4be7
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,7 +11,7 @@ ScriptedImporter:
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     fadeOut: 0
     borderMipMap: 0
     mipMapsPreserveCoverage: 0
@@ -29,7 +29,7 @@ ScriptedImporter:
     sRGBTexture: 1
     spriteMode: 2
     spriteExtrude: 1
-    spriteMeshType: 1
+    spriteMeshType: 0
     alignment: 0
     spritePivot: {x: 0.5, y: 0.5}
     spritePixelsToUnits: 100
@@ -91,18 +91,18 @@ ScriptedImporter:
     uvTransform: {x: 0, y: 0}
   mosaicSpriteImportData: []
   rigSpriteImportData:
-  - name: Ground1
+  - name: Health Bar
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 15, y: 10, z: 15, w: 10}
     rect:
       serializedVersion: 2
       x: 4
       y: 2172
-      width: 463
-      height: 463
-    spriteID: e705dd5e7284a0142b92437130ed8235
+      width: 720
+      height: 31
+    spriteID: bf37002fffd548a459c121c8eaf5e727
     internalID: 0
     spriteBone: []
     spriteOutline: []
@@ -112,51 +112,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -1685, y: 1324}
-  - name: Player
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 3852
-      y: 4
-      width: 57
-      height: 136
-    spriteID: a370128237dea5e43b8bf5d582dfa990
-    internalID: 0
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    parentGroupIndex: -1
-    uvTransform: {x: 2085, y: -1307}
-  - name: Coin
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 3852
-      y: 148
-      width: 30
-      height: 30
-    spriteID: a91a53608512c56468164418c11c1a40
-    internalID: 0
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    parentGroupIndex: -1
-    uvTransform: {x: 1830, y: -1269}
+    uvTransform: {x: -199, y: 147}
   - name: Background (Reference)
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -168,7 +124,7 @@ ScriptedImporter:
       y: 4
       width: 3840
       height: 2160
-    spriteID: b21666f7d1bba8b4d9c6d978a78f045c
+    spriteID: 5a31bff2a63392d4d9973ef189915ebc
     internalID: 0
     spriteBone: []
     spriteOutline: []
@@ -179,18 +135,18 @@ ScriptedImporter:
     tessellationDetail: 0
     parentGroupIndex: -1
     uvTransform: {x: 4, y: 4}
-  - name: Key
+  - name: Inventory Key
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 3914
-      y: 1
-      width: 65
-      height: 70
-    spriteID: 5adc21542d609054fb816bfa4604b580
+      x: 3852
+      y: 129
+      width: 105
+      height: 120
+    spriteID: 7dc27783fbc132b4da3cd24d39164cb5
     internalID: 0
     spriteBone: []
     spriteOutline: []
@@ -200,8 +156,74 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: 1976, y: -1390}
-  platformSettings: []
+    uvTransform: {x: 322, y: -1853}
+  - name: Inventory Blank
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 3852
+      y: 254
+      width: 105
+      height: 120
+    spriteID: f68d742a2513dbe4b88966b977b28b37
+    internalID: 0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    parentGroupIndex: -1
+    uvTransform: {x: 211, y: -1728}
+  - name: Inventory Key Gem
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 3852
+      y: 4
+      width: 105
+      height: 120
+    spriteID: a80fc5649772b234b92ef307e7ec0e3f
+    internalID: 0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    parentGroupIndex: -1
+    uvTransform: {x: 466, y: -1978}
+  platformSettings:
+  - name: DefaultTexturePlatform
+    overridden: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
   mosaicLayers: 1
   documentPivot: {x: 0, y: 0}
   documentAlignment: 7
@@ -220,40 +242,40 @@ ScriptedImporter:
   characterMode: 1
   mosaicPSDLayers: []
   rigPSDLayers:
-  - name: Key
-    spriteName: Key
+  - name: Inventory Key Gem
+    spriteName: Inventory Key Gem
     isGroup: 0
     parentIndex: -1
-    spriteID: 5adc21542d609054fb816bfa4604b580
-    layerID: 10
-    mosaicPosition: {x: 3917, y: 4}
-  - name: Coin
-    spriteName: Coin
-    isGroup: 0
-    parentIndex: -1
-    spriteID: a91a53608512c56468164418c11c1a40
-    layerID: 9
-    mosaicPosition: {x: 3852, y: 148}
-  - name: Player
-    spriteName: Player
-    isGroup: 0
-    parentIndex: -1
-    spriteID: a370128237dea5e43b8bf5d582dfa990
-    layerID: 6
+    spriteID: a80fc5649772b234b92ef307e7ec0e3f
+    layerID: 21
     mosaicPosition: {x: 3852, y: 4}
-  - name: Ground1
-    spriteName: Ground1
+  - name: Inventory Key
+    spriteName: Inventory Key
     isGroup: 0
     parentIndex: -1
-    spriteID: e705dd5e7284a0142b92437130ed8235
-    layerID: 5
+    spriteID: 7dc27783fbc132b4da3cd24d39164cb5
+    layerID: 18
+    mosaicPosition: {x: 3852, y: 129}
+  - name: Inventory Blank
+    spriteName: Inventory Blank
+    isGroup: 0
+    parentIndex: -1
+    spriteID: f68d742a2513dbe4b88966b977b28b37
+    layerID: 20
+    mosaicPosition: {x: 3852, y: 254}
+  - name: Health Bar
+    spriteName: Health Bar
+    isGroup: 0
+    parentIndex: -1
+    spriteID: bf37002fffd548a459c121c8eaf5e727
+    layerID: 10
     mosaicPosition: {x: 4, y: 2172}
   - name: Background (Reference)
     spriteName: Background (Reference)
     isGroup: 0
     parentIndex: -1
-    spriteID: b21666f7d1bba8b4d9c6d978a78f045c
-    layerID: 8
+    spriteID: 5a31bff2a63392d4d9973ef189915ebc
+    layerID: 11
     mosaicPosition: {x: 4, y: 4}
   characterData:
     bones: []
@@ -261,7 +283,7 @@ ScriptedImporter:
     dimension: {x: 0, y: 0}
     characterGroups: []
   generateGOHierarchy: 0
-  textureAssetName: Level 1 Texture
-  prefabAssetName: Level 1 Prefab
-  spriteLibAssetName: Level 1 Sprite Lib
+  textureAssetName: UI Texture
+  prefabAssetName: UI Prefab
+  spriteLibAssetName: UI Sprite Lib
   secondarySpriteTextures: []
