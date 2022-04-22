@@ -9,13 +9,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Ground
   - Interactable
+  - Landscape
   - Enemy
-  - Player
   - 
   - 
   - 
@@ -56,4 +56,7 @@ TagManager:
     locked: 0
   - name: Foreground Decoration
     uniqueID: 3393705733
+    locked: 0
+  - name: Foreground
+    uniqueID: 954998827
     locked: 0

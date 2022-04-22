@@ -6,22 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class NewPlayer : PhysicsObject
 {    
+    [Header("Attributes")]
     public int attackPower = 10;
-
-    [SerializeField] private float maxSpeed = 5.0f;
-    [SerializeField] private float jumpPower = 10.0f;
+    [SerializeField] private float maxSpeed = 5.0f;  
+    [SerializeField] private float jumpPower = 10.0f; 
     [SerializeField] private float attachDuration = 0.1f;
     [SerializeField] private int maxHealth = 100;
-    [SerializeField] private GameObject attackBox;
 
-    // UI
-    [SerializeField] private Text coinsText;
-    [SerializeField] private Image healthBar;
-    [SerializeField] private Image inventoryItem;
+    [Header("Reference")]
+    [SerializeField] private GameObject attackBox;
     [SerializeField] private Sprite inventoryBlank;
     [SerializeField] private string inventoryBlankName;
     private Dictionary<string, Sprite> inventory = new Dictionary<string, Sprite>();
-    private Vector2 healthBarOriginSize;
 
     private int ammo;
     private int health;
@@ -30,20 +26,30 @@ public class NewPlayer : PhysicsObject
     
     // Singleton instantation
     private static NewPlayer instance;
-    public static NewPlayer Instance
+    public static NewPlayer Instance => instance;
+
+    #region Unity Callback Funtions
+    private void Awake() 
     {
-        get 
+        if (instance != null)
         {
-            if (instance == null) instance = GameObject.FindObjectOfType<NewPlayer>();
-            return instance;
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
         }
     }
 
-    #region Unity Callback Funtions
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
+        SetSpawnLocation();
+
         health = maxHealth;
-        healthBarOriginSize = healthBar.rectTransform.sizeDelta;
+        
         inventory.Add(inventoryBlankName, inventoryBlank);
         UpdateUI(inventoryBlankName);
     }
@@ -66,13 +72,7 @@ public class NewPlayer : PhysicsObject
     #region Other
     private void UpdateUI(string inventoryItemName = "")
     {
-        coinsText.text = coinsCollected.ToString();
-        healthBar.rectTransform.sizeDelta = new Vector2(healthBarOriginSize.x * ((float)health / maxHealth), healthBarOriginSize.y);
         
-        if (inventoryItemName != "")
-        {
-            inventoryItem.sprite = inventory[inventoryItemName];
-        }
     }
 
     private IEnumerator ActivateAttack()
@@ -91,10 +91,26 @@ public class NewPlayer : PhysicsObject
     private void Die()
     {
         SceneManager.LoadScene("Level1");
+        Init();
+        SetSpawnLocation();
     }
     #endregion
 
     #region Callbacks
+    public void Init()
+    {
+        health = maxHealth;
+        coinsCollected = 0;
+        inventory.Clear();
+        inventory.Add(inventoryBlankName, inventoryBlank);
+        UpdateUI(inventoryBlankName);
+    }
+
+    public void SetSpawnLocation()
+    {
+        transform.position = GameObject.Find("Spawn Location").transform.position;
+    }
+
     public void AddCoin()
     { 
         coinsCollected++;
