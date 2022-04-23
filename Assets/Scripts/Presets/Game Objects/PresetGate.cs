@@ -5,14 +5,15 @@ using UnityEngine;
 public class PresetGate : MonoBehaviour
 {
     [SerializeField] private InventoryItemData requiredInventoryItem;
-    
+
     private void OnTriggerEnter2D(Collider2D collision) 
     {
         if (collision.gameObject == GameManager.Instance.player.gameObject)
         {
             if (GameManager.Instance.inventorySystem.Get(requiredInventoryItem) != null)
             {
-                GameManager.Instance.player.pickUpCallbacks.UseKey();
+                GameManager.Instance.eventSystem.PresetGateOpenTrigger();
+                GameManager.Instance.inventorySystem.Remove(requiredInventoryItem);
                 OpenGate();
             }
         }

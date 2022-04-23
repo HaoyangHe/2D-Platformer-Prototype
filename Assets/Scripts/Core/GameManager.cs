@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("References")]
     public UIController uIController;
+    public EventSystem eventSystem;
     public InventorySystem inventorySystem;
     public PresetPlayer player;
     
@@ -30,6 +31,11 @@ public class GameManager : MonoBehaviour
         {
             uIController = FindObjectOfType<UIController>();
         }    
+
+        if (eventSystem == null && FindObjectOfType<EventSystem>())
+        {
+            eventSystem = FindObjectOfType<EventSystem>();
+        }
 
         if (inventorySystem == null && FindObjectOfType<InventorySystem>())
         {

@@ -8,7 +8,6 @@ public class PresetPlayerMovement : PhysicsObject
     private int facingDirection = 1;        // Facing right by default
     private bool jumpInput;
     private float inputX;
-    private Vector2 workSpace;
 
     protected override void ComputeVelocity()
     {
@@ -18,8 +17,7 @@ public class PresetPlayerMovement : PhysicsObject
         CheckIfShouldFlip();
         
         // Apply movement
-        workSpace.Set(inputX * playerData.maxHorizontalSpeed, 0);
-        targetVelocity = workSpace;
+        targetVelocity.Set(inputX * playerData.maxHorizontalSpeed, 0);
         
         if (grounded && jumpInput)
         {

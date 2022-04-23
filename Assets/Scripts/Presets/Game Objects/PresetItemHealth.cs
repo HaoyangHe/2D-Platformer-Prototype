@@ -9,6 +9,6 @@ public class PresetItemHealth : Collectable
     
     public override void OnHandlePickupItem()
     {
-        GameManager.Instance.player.pickUpCallbacks.AddHealth(addPower);
+        GameManager.Instance.eventSystem.PresetItemHealthPickUpTrigger(addPower);
     }
 }

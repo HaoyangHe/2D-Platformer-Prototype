@@ -7,6 +7,6 @@ public class PresetItemKey : Collectable
     public override void OnHandlePickupItem()
     {
         base.OnHandlePickupItem();
-        GameManager.Instance.player.pickUpCallbacks.PickUpKey(itemData);
+        GameManager.Instance.eventSystem.PresetItemKeyPickUpTrigger(itemData);
     }
 }

@@ -9,6 +9,6 @@ public class PresetItemCoin : Collectable
 
     public override void OnHandlePickupItem()
     {
-        GameManager.Instance.player.pickUpCallbacks.AddCoin(amount);
+        GameManager.Instance.eventSystem.PresetItemCoinPickUpTrigger(amount);
     }
 }

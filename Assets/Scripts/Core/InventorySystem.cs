@@ -5,7 +5,7 @@ using UnityEngine;
 public class InventorySystem : MonoBehaviour
 {
     private Dictionary<InventoryItemData, InventoryItem> itemDictionary;
-    public List<InventoryItem> inventory;           // Allows adding InventoryItems from the inspector.
+    public List<InventoryItem> inventory;           // Allows adding InventoryItems from the inspector.      
     
     private static InventorySystem instance;        // Using GameManager.Instance.inventorySystem as far as posible is recommended.
     public static InventorySystem Instance => instance;
@@ -18,7 +18,7 @@ public class InventorySystem : MonoBehaviour
         }
         else 
         {
-            // Destroy(gameObject);
+            Destroy(gameObject);
             return;
         }
         

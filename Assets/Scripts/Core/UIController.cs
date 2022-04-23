@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Holds UI component references & callback funcions
-public class UIController : MonoBehaviour, PickUpCallbacks
+public class UIController : MonoBehaviour
 {
     [Header("UI references")]
     [SerializeField] private Text coinsText;
@@ -28,43 +28,67 @@ public class UIController : MonoBehaviour, PickUpCallbacks
         {
             Destroy(gameObject);
             return;
-        }    
+        }
+        
+        healthBarOriginSize = healthBar.rectTransform.sizeDelta;    
     }
 
     private void Start() 
     {
-        healthBarOriginSize = healthBar.rectTransform.sizeDelta;
-        Init();
+        Init();  
+
+        // Subscribe to events. 
+        GameManager.Instance.eventSystem.onSceneBegin += Init;
+        GameManager.Instance.eventSystem.onPresetGateOpen += ClearSprite;
+        GameManager.Instance.eventSystem.onPresetPlayerDying += InitPlayerRelated;
     }
 
-    private void Init()
+    private void OnDestroy() 
+    {
+        // Make sure to unsubscribe.
+        GameManager.Instance.eventSystem.onSceneBegin -= Init;
+        GameManager.Instance.eventSystem.onPresetGateOpen -= ClearSprite;
+        GameManager.Instance.eventSystem.onPresetPlayerDying -= InitPlayerRelated;
+    }
+
+    public void Init()
+    {
+        InitPlayerRelated();
+        InitInventoryRelated();
+    }
+
+    private void InitPlayerRelated()
     {
         coinsText.text = GameManager.Instance.player.coinsCount.ToString();
         workSpace.Set(healthBarOriginSize.x * ((float)GameManager.Instance.player.startHP / GameManager.Instance.player.maxHP),
                                               healthBarOriginSize.y);
         healthBar.rectTransform.sizeDelta = workSpace;
+    }
+
+    private void InitInventoryRelated()
+    {
         inventoryItem.sprite = inventoryBlank;
     }
 
     #region Callback Functions 
-    public void AddHealth(int value = 10)
+    public void SetHealth(int value = 10)
     {
         workSpace.Set(healthBarOriginSize.x * ((float)value / GameManager.Instance.player.maxHP),
                                               healthBarOriginSize.y);
         healthBar.rectTransform.sizeDelta = workSpace;
     }
 
-    public void AddCoin(int value = 1)
+    public void SetCoin(int value = 1)
     {
         coinsText.text = value.ToString();
     }
 
-    public void PickUpKey(InventoryItemData item)
+    public void SetSprite(InventoryItemData item)
     {
         inventoryItem.sprite = item.icon;
     }
 
-    public void UseKey()
+    public void ClearSprite()
     {
         inventoryItem.sprite = inventoryBlank;
     }

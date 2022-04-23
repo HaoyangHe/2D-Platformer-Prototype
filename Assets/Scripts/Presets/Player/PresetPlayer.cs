@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PresetPlayer : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class PresetPlayer : MonoBehaviour
     [System.NonSerialized] public int coinsCount;
     
     // Components & References
-    [System.NonSerialized] public PresetPickUp pickUpCallbacks;
+    // An alternative choice for you to access callbacks else where rather than subscribe to the events via the EventSystem.
+    [System.NonSerialized] public PlayerCallbacks callbacks;    
 
     private static PresetPlayer instance;           // Using GameManager.Instance.player as far as posible is recommended.
     public static PresetPlayer Instance => instance;
@@ -31,18 +33,37 @@ public class PresetPlayer : MonoBehaviour
         }
         
         DontDestroyOnLoad(gameObject);
-
-        Init();
+        
+        LoadAttributes();
     }
 
     private void Start() 
     {
-        pickUpCallbacks = new PresetPickUp();       // Make sure NOT to put this line of code in Awake().
+        if (gameObject.GetComponent<PlayerCallbacks>() != null)
+        {
+            callbacks = gameObject.GetComponent<PlayerCallbacks>();
+        }
+        else 
+        {
+            Debug.LogError("Player callbacks han't been set yet.");
+        }
+    }
+
+    public void SaveAttributes()
+    {
+        startHP = healthPoint;
+        originalCoins = coinsCount;
     }
     
-    private void Init()
+    public void LoadAttributes()
     {
         healthPoint = startHP;
         coinsCount = originalCoins;
+        SetSpawnLocation();
+    }
+
+    public void SetSpawnLocation()
+    {
+        transform.position = GameObject.Find("Spawn Location").transform.position;
     }
 }
