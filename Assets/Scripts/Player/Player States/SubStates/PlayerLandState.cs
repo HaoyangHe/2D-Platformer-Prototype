@@ -12,7 +12,7 @@ public class PlayerLandState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
-        player.SetVelocityX(0.0f);
+        core.Movement.SetVelocityX(0.0f);
     }
 
     public override void LogicUpdate()

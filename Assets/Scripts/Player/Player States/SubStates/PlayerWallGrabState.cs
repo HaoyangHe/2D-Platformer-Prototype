@@ -42,6 +42,6 @@ public class PlayerWallGrabState : PlayerTouchingWallState
     {
         player.transform.position = holdPosition;
 
-        player.SetVelocityZero();   // Keeps the cinemachine camera focus on the player
+        core.Movement.SetVelocityZero();   // Keeps the cinemachine camera focus on the player
     }
 }

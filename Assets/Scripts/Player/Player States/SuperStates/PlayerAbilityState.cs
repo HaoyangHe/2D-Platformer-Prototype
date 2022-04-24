@@ -39,7 +39,7 @@ public class PlayerAbilityState : PlayerState
 
         DoChecks();
 
-        if (isGrounded && player.CurrentVelocity.y < 0.01f)
+        if (isGrounded && core.Movement.CurrentVelocity.y < 0.01f)
         {
             stateMachine.ChangeState(player.IdleState);
         }
@@ -51,7 +51,7 @@ public class PlayerAbilityState : PlayerState
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
-        else if (isTouchingWall && player.CurrentVelocity.y < -0.01f)
+        else if (isTouchingWall && core.Movement.CurrentVelocity.y < -0.01f)
         {
             player.WallSlideState.StartCoyoteTime();
             stateMachine.ChangeState(player.WallSlideState);
@@ -74,10 +74,10 @@ public class PlayerAbilityState : PlayerState
     public override void DoChecks()
     {
         base.DoChecks();
-        isGrounded = player.CheckIfGrounded();
-        isTouchingWall = player.CheckIfTouchingWall();
-        isTouchingLedge = player.CheckIfTouchingLedge();
-        isNearBashAble = player.CheckIfNearBashAble();
+        isGrounded = core.CollisionSenses.IsGrounded;
+        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
+        isTouchingLedge = core.CollisionSenses.IsTouchingLedge;
+        isNearBashAble = core.CollisionSenses.CheckIfNearBashAble();
 
         if (isTouchingWall && !isTouchingLedge)
         {

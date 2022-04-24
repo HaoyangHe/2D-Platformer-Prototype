@@ -18,7 +18,7 @@ public class PlayerJumpState : PlayerAbilityState
         player.InputHandler.UseJumpInput();
         player.InAirState.SetIsJumping();
 
-        player.SetVelocityY(playerData.jumpVelocity);
+        core.Movement.SetVelocityY(playerData.jumpVelocity);
         amountOfJumpsLeft--;
         isAbilityDone = true;
     }

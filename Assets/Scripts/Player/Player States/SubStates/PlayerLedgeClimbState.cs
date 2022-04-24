@@ -8,6 +8,7 @@ public class PlayerLedgeClimbState : PlayerState
     private Vector2 cornerPos;
     private Vector2 startPos;
     private Vector2 stopPos;
+    private Vector2 workspace;
     
     private bool isHanging;
     private bool isClimbing;
@@ -25,11 +26,11 @@ public class PlayerLedgeClimbState : PlayerState
     {
         base.Enter();
 
-        player.SetVelocityZero();
+        core.Movement.SetVelocityZero();
         player.transform.position = detectedPos;
-        cornerPos = player.DetermineCornerPosition();
-        startPos.Set(cornerPos.x - player.FacingDirection * playerData.startOffset.x, cornerPos.y - playerData.startOffset.y);
-        stopPos.Set(cornerPos.x + player.FacingDirection * playerData.stopOffset.x, cornerPos.y + playerData.stopOffset.y);
+        cornerPos = DetermineCornerPosition();
+        startPos.Set(cornerPos.x - core.Movement.FacingDirection * playerData.startOffset.x, cornerPos.y - playerData.startOffset.y);
+        stopPos.Set(cornerPos.x + core.Movement.FacingDirection * playerData.stopOffset.x, cornerPos.y + playerData.stopOffset.y);
         player.transform.position = startPos;
     }
 
@@ -61,16 +62,16 @@ public class PlayerLedgeClimbState : PlayerState
             jumpInput = player.InputHandler.JumpInput;
 
             player.transform.position = startPos;
-            player.SetVelocityZero();
+            core.Movement.SetVelocityZero();
 
-            if (xInput == player.FacingDirection && isHanging && !isClimbing)
+            if (xInput == core.Movement.FacingDirection && isHanging && !isClimbing)
             {
                 isClimbing = true;
                 player.Anim.SetBool("climbLedge", true);
             }
-            else if ((yInput == -1 || xInput == -player.FacingDirection) && isHanging && !isClimbing)
+            else if ((yInput == -1 || xInput == -core.Movement.FacingDirection) && isHanging && !isClimbing)
             {
-                player.CheckIfShouldFlip(xInput);
+                core.Movement.CheckIfShouldFlip(xInput);
                 stateMachine.ChangeState(player.InAirState);
             }
             else if (jumpInput && !isClimbing)
@@ -97,5 +98,19 @@ public class PlayerLedgeClimbState : PlayerState
     public void SetDetectedPosition(Vector2 pos)
     {
         detectedPos = pos;
+    }
+
+    public Vector2 DetermineCornerPosition()
+    {
+        RaycastHit2D xHit = Physics2D.Raycast(core.CollisionSenses.WallCheck.position, core.Movement.FacingDirection * Vector2.right, playerData.wallCheckDistance, playerData.whatIsGround);
+        float xDist = xHit.distance;
+        float tolerance = 0.015f;
+        workspace.Set(core.Movement.FacingDirection * (xDist + tolerance), 0.0f);
+
+        RaycastHit2D yHit = Physics2D.Raycast(core.CollisionSenses.LedgeCheck.position + (Vector3)workspace, Vector2.down, core.CollisionSenses.LedgeCheck.position.y + tolerance - core.CollisionSenses.WallCheck.position.y, playerData.whatIsGround);
+        float yDist = yHit.distance;
+        workspace.Set(core.CollisionSenses.WallCheck.position.x + core.Movement.FacingDirection * xDist, core.CollisionSenses.LedgeCheck.position.y - yDist);
+
+        return workspace;
     }
 }

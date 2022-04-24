@@ -61,9 +61,9 @@ public class PlayerInAirState : PlayerState
 
         DoChecks();
 
-        isNearBashAble = player.CheckIfNearBashAble();
+        isNearBashAble = core.CollisionSenses.CheckIfNearBashAble();
 
-        if (isGrounded && player.CurrentVelocity.y < 0.01f)
+        if (isGrounded && core.Movement.CurrentVelocity.y < 0.01f)
         {
             stateMachine.ChangeState(player.LandState);
         }
@@ -71,7 +71,7 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
-        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != player.FacingDirection)))
+        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != core.Movement.FacingDirection)))
         {
             stateMachine.ChangeState(player.WallJumpState);
         }
@@ -83,7 +83,7 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
-        else if (isTouchingWall && player.CurrentVelocity.y < -0.01f)
+        else if (isTouchingWall && core.Movement.CurrentVelocity.y < -0.01f)
         {
             player.WallSlideState.StartCoyoteTime();
             stateMachine.ChangeState(player.WallSlideState);
@@ -103,8 +103,8 @@ public class PlayerInAirState : PlayerState
                 player.BashState.ResetWasBash();
             }
 
-            player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
-            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(core.Movement.CurrentVelocity.x));
+            player.Anim.SetFloat("yVelocity", core.Movement.CurrentVelocity.y);
         }
     }
 
@@ -114,41 +114,41 @@ public class PlayerInAirState : PlayerState
 
         if (isAbleToMove)
         {
-            bool hasFlip = player.CheckIfShouldFlip(xInput);
+            bool hasFlip = core.Movement.CheckIfShouldFlip(xInput);
             
             if (xInput != 0)
             {
                 Vector2 forceToAdd = new Vector2(xInput * playerData.airMovementForce, 0.0f);
                 if (hasFlip)
                 {
-                    if (Mathf.Abs(player.CurrentVelocity.x) > playerData.movementVelocity)
+                    if (Mathf.Abs(core.Movement.CurrentVelocity.x) > playerData.movementVelocity)
                     {
-                        player.SetVelocityX(player.CurrentVelocity.x * playerData.highSpeedFlipXMultiplier);
+                        core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.highSpeedFlipXMultiplier);
                     }
                     else
                     {
-                        player.SetVelocityX(player.CurrentVelocity.x * playerData.lowSpeedFlipXMultiplier);
+                        core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.lowSpeedFlipXMultiplier);
                     }
                 }
-                player.AddForce(forceToAdd);
+                core.Movement.AddForce(forceToAdd);
             }
 
             if (xVelocityDrag)
             {
-                if (Mathf.Abs(player.CurrentVelocity.x) > playerData.movementVelocity)
+                if (Mathf.Abs(core.Movement.CurrentVelocity.x) > playerData.movementVelocity)
                 {
-                    player.SetVelocityX(player.CurrentVelocity.x * playerData.highSpeedXMultiplier);
+                    core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.highSpeedXMultiplier);
                 }
                 else if (xInput == 0 && !hasDrag)
                 {
                     hasDrag = true;
-                    player.SetVelocityX(player.CurrentVelocity.x * playerData.lowSpeedXMultiplier);
+                    core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.lowSpeedXMultiplier);
                 }
             }
 
-            if (yVelocityDrag && player.CurrentVelocity.y > playerData.startDargYVelocity)
+            if (yVelocityDrag && core.Movement.CurrentVelocity.y > playerData.startDargYVelocity)
             {
-                player.SetVelocityY(player.CurrentVelocity.y * playerData.airDragYMultiplier);
+                core.Movement.SetVelocityY(core.Movement.CurrentVelocity.y * playerData.airDragYMultiplier);
             }
         }
     }
@@ -157,11 +157,11 @@ public class PlayerInAirState : PlayerState
     {
         base.DoChecks();
 
-        isGrounded = player.CheckIfGrounded();
-        isTouchingWall = player.CheckIfTouchingWall();
-        isTouchingWallBack = player.CheckIfTouchingWallBack();
-        isTouchingLedge = player.CheckIfTouchingLedge();
-        isNearBashAble = player.CheckIfNearBashAble();
+        isGrounded = core.CollisionSenses.IsGrounded;
+        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
+        isTouchingWallBack = core.CollisionSenses.IsTouchingWallBack;
+        isTouchingLedge = core.CollisionSenses.IsTouchingLedge;
+        isNearBashAble = core.CollisionSenses.CheckIfNearBashAble();
 
         if (isTouchingWall && !isTouchingLedge)
         {
@@ -175,10 +175,10 @@ public class PlayerInAirState : PlayerState
         {
             if (jumpInputStop)
             {
-                player.SetVelocityY(playerData.variableJumpHeightMultiplier * player.CurrentVelocity.y);
+                core.Movement.SetVelocityY(playerData.variableJumpHeightMultiplier * core.Movement.CurrentVelocity.y);
                 isJumping = false;
             }
-            else if (player.CurrentVelocity.y < -0.01f)
+            else if (core.Movement.CurrentVelocity.y < -0.01f)
             {
                 isJumping = false;
             }

@@ -40,7 +40,7 @@ public class PlayerTouchingWallState : PlayerState
         grabInput = player.InputHandler.GrabInput;
         jumpInput = player.InputHandler.JumpInput;
 
-        if (jumpInput && xInput != player.FacingDirection)
+        if (jumpInput && xInput != core.Movement.FacingDirection)
         {
             stateMachine.ChangeState(player.WallJumpState);
         }
@@ -52,11 +52,11 @@ public class PlayerTouchingWallState : PlayerState
         {
             stateMachine.ChangeState(player.IdleState);
         }
-        else if (!isTouchingWall || xInput * player.FacingDirection < 0)
+        else if (!isTouchingWall || xInput * core.Movement.FacingDirection < 0)
         {
             if (CheckGetOfWall() || coyoteTime)
             {
-                player.CheckIfShouldFlip(xInput);            
+                core.Movement.CheckIfShouldFlip(xInput);            
                 stateMachine.ChangeState(player.InAirState);
             }
         }
@@ -71,9 +71,9 @@ public class PlayerTouchingWallState : PlayerState
     {
         base.DoChecks();
 
-        isGrounded = player.CheckIfGrounded();
-        isTouchingWall = player.CheckIfTouchingWall();
-        isTouchingLedge = player.CheckIfTouchingLedge();
+        isGrounded = core.CollisionSenses.IsGrounded;
+        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
+        isTouchingLedge = core.CollisionSenses.IsTouchingLedge;
 
         if (isTouchingWall && !isTouchingLedge)
         {

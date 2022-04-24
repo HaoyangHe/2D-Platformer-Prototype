@@ -19,6 +19,7 @@ public class PlayerInputHandler : MonoBehaviour
     public bool BashInput { get; private set; }
     public bool BashInputStop { get; private set; }
     public float XInputStartTime { get; private set; }
+    public float YInputStartTime { get; private set; }
 
     [SerializeField]
     private float xInputTolerance = 0.5f;
@@ -42,7 +43,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void Update() 
     {
-        CheckJumpInputHoldTime();
+        CheckJumpInputHoldTime();           
     }
 
     public void OnMoveInput(InputAction.CallbackContext context) 
@@ -62,7 +63,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (Mathf.Abs(RawMovementInput.y) > yInputTolerance)
         {
             NormInputY = (int)(RawMovementInput * Vector2.up).normalized.y;
-            XInputStartTime = Time.time;
+            YInputStartTime = Time.time;
         }
         else
         {

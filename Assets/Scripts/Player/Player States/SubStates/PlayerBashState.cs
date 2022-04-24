@@ -34,10 +34,10 @@ public class PlayerBashState : PlayerAbilityState
         player.JumpState.DecreaseAmountOfJumpsLeft();
         player.BashDirectionIndicator.gameObject.SetActive(true);
 
-        player.BashAbleObj.BeforeBash();
-        player.BashDirectionIndicator.position = player.BashAbleObj.Transform.position;
+        core.CollisionSenses.BashAbleObj.BeforeBash();
+        player.BashDirectionIndicator.position = core.CollisionSenses.BashAbleObj.Transform.position;
 
-        bashDirction = player.FacingDirection * Vector2.one;
+        bashDirction = core.Movement.FacingDirection * Vector2.one;
         isHolding = true;
         CanBash = false;
         WasBash = true;
@@ -49,9 +49,10 @@ public class PlayerBashState : PlayerAbilityState
 
         player.RB2D.drag = 0.0f;
 
-        if (player.CurrentVelocity.y > playerData.endBashMaxYVelocity)
+        if (core.Movement.CurrentVelocity.y > playerData.endBashMaxYVelocity)
         {
-            player.SetVelocityY(player.CurrentVelocity.y * playerData.endBashYUpMultiplier);
+            
+            core.Movement.SetVelocityY(core.Movement.CurrentVelocity.y * playerData.endBashYUpMultiplier);
         }
     }
 
@@ -65,7 +66,7 @@ public class PlayerBashState : PlayerAbilityState
             {
                 bashDirctionInput = player.InputHandler.RawBashDirecionInput;
                 bashInputStop = player.InputHandler.BashInputStop;
-                player.BashDirectionIndicator.position = player.BashAbleObj.Transform.position;
+                player.BashDirectionIndicator.position = core.CollisionSenses.BashAbleObj.Transform.position;
                 xInput = player.InputHandler.NormInputX;
                 
                 if (bashDirctionInput != Vector2.zero)
@@ -84,26 +85,26 @@ public class PlayerBashState : PlayerAbilityState
 
                     if (xInput * bashDirction.x >= 0)
                     {
-                        player.CheckIfShouldFlip(bashDirction.x > 0 ? 1 : -1);
+                        core.Movement.CheckIfShouldFlip(bashDirction.x > 0 ? 1 : -1);
                     }
                     else
                     {
-                        player.CheckIfShouldFlip(xInput > 0 ? 1 : -1);
+                        core.Movement.CheckIfShouldFlip(xInput > 0 ? 1 : -1);
                     }
 
-                    player.transform.position = player.BashAbleObj.Transform.position;
-                    player.SetVelocityZero();
+                    player.transform.position = core.CollisionSenses.BashAbleObj.Transform.position;
+                    core.Movement.SetVelocityZero();
                     player.RB2D.drag = playerData.bashDrag;
 
                     player.BashDirectionIndicator.gameObject.SetActive(false);
 
-                    player.BashAbleObj.SetImpulse(-bashDirction * playerData.bashImpulse);
-                    player.BashAbleObj.AfterBash();
+                    core.CollisionSenses.BashAbleObj.SetImpulse(-bashDirction * playerData.bashImpulse);
+                    core.CollisionSenses.BashAbleObj.AfterBash();
                 }
             }
             else
             {
-                player.SetVelocity(playerData.bashVelocity, bashDirction);
+                core.Movement.SetVelocity(playerData.bashVelocity, bashDirction);
 
                 if (Time.time >= startTime + playerData.bashTime)
                 {
@@ -111,8 +112,8 @@ public class PlayerBashState : PlayerAbilityState
                 }
             }
 
-            player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
-            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(core.Movement.CurrentVelocity.x));
+            player.Anim.SetFloat("yVelocity", core.Movement.CurrentVelocity.y);
         }
     }
 
@@ -125,8 +126,8 @@ public class PlayerBashState : PlayerAbilityState
     {
         base.DoChecks();
 
-        isGrounded = player.CheckIfGrounded();
-        isTouchingWall = player.CheckIfTouchingWall();
+        isGrounded = core.CollisionSenses.IsGrounded;
+        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
     }
 
     public void ResetWasBash()
