@@ -17,11 +17,6 @@ public class PlayerData : ScriptableObject
     public float wallJumpTime = 0.4f;
     public Vector2 wallJumpAngle = new Vector2(1, 2);
 
-    [Header("Wall Hop State")]
-    public float wallHopVelocity = 16.0f;
-    public float wallHopTime = 0.2f;
-    public Vector2 wallHopAngle = new Vector2(1, 2);
-
     [Header("In Air State")]
     public float coyoteTimeInAir = 0.2f;
     public float startDargYVelocity = 13.0f;
@@ -45,7 +40,7 @@ public class PlayerData : ScriptableObject
 
     [Header("Ledge Climb State")]
     public Vector2 startOffset = new Vector2(0.35f, 0.95f);
-    public Vector2 stopOffset = new Vector2(0.4f, 1.0f);
+    public Vector2 endOffset = new Vector2(0.4f, 1.0f);
 
     [Header("Bash State")]
     public float maxHoldTime = 1.0f;
@@ -57,11 +52,4 @@ public class PlayerData : ScriptableObject
     public float endBashMaxYVelocity = 20.0f;
     public float endBashYUpMultiplier = 0.7f;
     public float distBetweenAfterImages = 0.8f;
-
-    [Header("Check Variables")]
-    public float groundCheckRadius = 0.3f;
-    public float wallCheckDistance = 0.5f;
-    public float bashCheckRadius = 1.5f;
-    public LayerMask whatIsGround;
-    public LayerMask whatIsInteractable;
 }

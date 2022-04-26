@@ -1,19 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerGroundedState : PlayerState
 {
+    // Player Inputs
     protected int xInput;
     protected bool jumpInput;
-
     private bool grabInput;
+
+    // Collision Senses
     private bool isGrounded;
     private bool isTouchingWall;
     private bool isTouchingLedge;
 
-    public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName)
+    public PlayerGroundedState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName)
     {
     }
 
@@ -37,17 +35,16 @@ public class PlayerGroundedState : PlayerState
         jumpInput = player.InputHandler.JumpInput;
         grabInput = player.InputHandler.GrabInput;
 
-        if (jumpInput && player.JumpState.CanJump()) 
+        if (jumpInput && player.JumpState.CanJump())    // Player presses the JumpButton.
         {
             stateMachine.ChangeState(player.JumpState);
         }
-        else if (!isGrounded)
+        else if (!isGrounded)   // Player walks to the edge and falls.
         {
-            player.InAirState.StartCoyoteTime();
             stateMachine.ChangeState(player.InAirState);
         }
-        else if (isTouchingWall && isTouchingLedge && grabInput)
-        {
+        else if (isTouchingLedge && isTouchingWall && grabInput)    // Player walks to a wall and presses GrabButton.
+        {                                                           // NOTE: Adding isTouchingLedge makes sure that the wall is tall enougth to grab.
             stateMachine.ChangeState(player.WallGrabState);
         }
     }
@@ -61,8 +58,8 @@ public class PlayerGroundedState : PlayerState
     {
         base.DoChecks();
 
-        isGrounded = core.CollisionSenses.IsGrounded;
-        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
-        isTouchingLedge = core.CollisionSenses.IsTouchingLedge;
+        isGrounded = collisionSenser.IsGrounded;
+        isTouchingWall = collisionSenser.IsTouchingWallFront;
+        isTouchingLedge = collisionSenser.IsTouchingLedge;
     }
 }

@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerIdleState : PlayerGroundedState
 {
-    public PlayerIdleState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName) 
+    public PlayerIdleState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName) 
     {
     }
 
     public override void Enter()
     {
         base.Enter();
-        core.Movement.SetVelocityX(0.0f);
+
+        movementAPI.SetVelocityX(0.0f);
     }
 
     public override void Exit()

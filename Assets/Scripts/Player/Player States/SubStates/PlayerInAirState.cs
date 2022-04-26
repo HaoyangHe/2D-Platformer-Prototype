@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInAirState : PlayerState
 {
-    // Input
+    // Player Inputs
     private int xInput;
     private bool jumpInput;
-    private bool jumpInputStop;
     private bool grabInput;
     private bool bashInput;
+    private bool jumpInputStop;
 
-    // Checks
+    // Collision Senses
     private bool isGrounded;
     private bool isTouchingWall;
     private bool isTouchingWallBack;
@@ -20,13 +18,14 @@ public class PlayerInAirState : PlayerState
     
     private bool coyoteTime;
     private bool isJumping;
+
     private bool hasDrag;
     private bool isAbleToMove;
     private bool xVelocityDrag;
     private bool yVelocityDrag;
     
-    public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName)
+    public PlayerInAirState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName)
     {
     }
 
@@ -35,60 +34,66 @@ public class PlayerInAirState : PlayerState
         base.Enter();
 
         hasDrag = false;
+        isAbleToMove = false;
         xVelocityDrag = true;
         yVelocityDrag = false;
-        isAbleToMove = false;
+
+        if (stateMachine.LastState is PlayerJumpState)
+        {
+            isJumping = true;
+        }
+        else if (stateMachine.LastState is PlayerGroundedState)
+        {
+            coyoteTime = true;
+        }
     }
 
     public override void Exit()
     {
         base.Exit();
+
+        coyoteTime = false;
+        isJumping = false;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        CheckCoyoteTime();
-
         xInput = player.InputHandler.NormInputX;
         jumpInput = player.InputHandler.JumpInput;
-        jumpInputStop = player.InputHandler.JumpInputStop;
         grabInput = player.InputHandler.GrabInput;
         bashInput = player.InputHandler.BashInput;
+        jumpInputStop = player.InputHandler.JumpInputStop;
 
-        CheckJumpMultiplier();
+        CheckCoyoteTime();          
+        CheckJumpMultiplier();      
 
-        DoChecks();
-
-        isNearBashAble = core.CollisionSenses.CheckIfNearBashAble();
-
-        if (isGrounded && core.Movement.CurrentVelocity.y < 0.01f)
+        if (isGrounded && movementAPI.CurrentVelocity.y < 0.01f) 
         {
             stateMachine.ChangeState(player.LandState);
         }
-        else if (isTouchingWall && !isTouchingLedge && !isGrounded)
+        else if (isTouchingWall && !isTouchingLedge && !isGrounded) 
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
-        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != core.Movement.FacingDirection)))
+        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != movementAPI.FacingDirection)))    
         {
             stateMachine.ChangeState(player.WallJumpState);
         }
-        else if (jumpInput && player.JumpState.CanJump()) 
+        else if (jumpInput && player.JumpState.CanJump())   
         {
             stateMachine.ChangeState(player.JumpState);
         }
-        else if (isTouchingWall && isTouchingLedge && grabInput)
+        else if (isTouchingWall && isTouchingLedge && grabInput) 
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
-        else if (isTouchingWall && core.Movement.CurrentVelocity.y < -0.01f)
+        else if (isTouchingWall && movementAPI.CurrentVelocity.y < -0.01f) 
         {
-            player.WallSlideState.StartCoyoteTime();
             stateMachine.ChangeState(player.WallSlideState);
         }
-        else if (isNearBashAble && bashInput)
+        else if (isNearBashAble && bashInput)   
         {
             stateMachine.ChangeState(player.BashState);
         }
@@ -103,8 +108,8 @@ public class PlayerInAirState : PlayerState
                 player.BashState.ResetWasBash();
             }
 
-            player.Anim.SetFloat("xVelocity", Mathf.Abs(core.Movement.CurrentVelocity.x));
-            player.Anim.SetFloat("yVelocity", core.Movement.CurrentVelocity.y);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x));
+            player.Anim.SetFloat("yVelocity", movementAPI.CurrentVelocity.y);
         }
     }
 
@@ -114,41 +119,41 @@ public class PlayerInAirState : PlayerState
 
         if (isAbleToMove)
         {
-            bool hasFlip = core.Movement.CheckIfShouldFlip(xInput);
+            bool hasFlip = movementAPI.CheckIfShouldFlip(xInput);
             
             if (xInput != 0)
             {
                 Vector2 forceToAdd = new Vector2(xInput * playerData.airMovementForce, 0.0f);
                 if (hasFlip)
                 {
-                    if (Mathf.Abs(core.Movement.CurrentVelocity.x) > playerData.movementVelocity)
+                    if (Mathf.Abs(movementAPI.CurrentVelocity.x) > playerData.movementVelocity)
                     {
-                        core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.highSpeedFlipXMultiplier);
+                        movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.highSpeedFlipXMultiplier);
                     }
                     else
                     {
-                        core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.lowSpeedFlipXMultiplier);
+                        movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.lowSpeedFlipXMultiplier);
                     }
                 }
-                core.Movement.AddForce(forceToAdd);
+                movementAPI.AddForce(forceToAdd);
             }
 
             if (xVelocityDrag)
             {
-                if (Mathf.Abs(core.Movement.CurrentVelocity.x) > playerData.movementVelocity)
+                if (Mathf.Abs(movementAPI.CurrentVelocity.x) > playerData.movementVelocity)
                 {
-                    core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.highSpeedXMultiplier);
+                    movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.highSpeedXMultiplier);
                 }
                 else if (xInput == 0 && !hasDrag)
                 {
                     hasDrag = true;
-                    core.Movement.SetVelocityX(core.Movement.CurrentVelocity.x * playerData.lowSpeedXMultiplier);
+                    movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.lowSpeedXMultiplier);
                 }
             }
 
-            if (yVelocityDrag && core.Movement.CurrentVelocity.y > playerData.startDargYVelocity)
+            if (yVelocityDrag && movementAPI.CurrentVelocity.y > playerData.startDargYVelocity)
             {
-                core.Movement.SetVelocityY(core.Movement.CurrentVelocity.y * playerData.airDragYMultiplier);
+                movementAPI.SetVelocityY(movementAPI.CurrentVelocity.y * playerData.airDragYMultiplier);
             }
         }
     }
@@ -157,11 +162,11 @@ public class PlayerInAirState : PlayerState
     {
         base.DoChecks();
 
-        isGrounded = core.CollisionSenses.IsGrounded;
-        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
-        isTouchingWallBack = core.CollisionSenses.IsTouchingWallBack;
-        isTouchingLedge = core.CollisionSenses.IsTouchingLedge;
-        isNearBashAble = core.CollisionSenses.CheckIfNearBashAble();
+        isGrounded = collisionSenser.IsGrounded;
+        isTouchingWall = collisionSenser.IsTouchingWallFront;
+        isTouchingWallBack = collisionSenser.IsTouchingWallBack;
+        isTouchingLedge = collisionSenser.IsTouchingLedge;
+        isNearBashAble = collisionSenser.CheckIfNearBashAble();
 
         if (isTouchingWall && !isTouchingLedge)
         {
@@ -169,23 +174,7 @@ public class PlayerInAirState : PlayerState
         }
     }
 
-    private void CheckJumpMultiplier()
-    {
-        if (isJumping)
-        {
-            if (jumpInputStop)
-            {
-                core.Movement.SetVelocityY(playerData.variableJumpHeightMultiplier * core.Movement.CurrentVelocity.y);
-                isJumping = false;
-            }
-            else if (core.Movement.CurrentVelocity.y < -0.01f)
-            {
-                isJumping = false;
-            }
-        }
-    }
-
-    private void CheckCoyoteTime()
+    private void CheckCoyoteTime()      // Player can still jump after fell from the edge within a very short period of time.
     {
         if (coyoteTime && Time.time > startTime + playerData.coyoteTimeInAir)
         {
@@ -194,14 +183,20 @@ public class PlayerInAirState : PlayerState
         }
     }
 
-    public void StartCoyoteTime() 
+    private void CheckJumpMultiplier()  // Player can achieve variable jump height by holding the JumpButton for a different period of time.
     {
-        coyoteTime = true;
-    }
-
-    public void SetIsJumping()
-    {
-        isJumping = true;
+        if (isJumping)
+        {
+            if (jumpInputStop)
+            {
+                movementAPI.SetVelocityY(playerData.variableJumpHeightMultiplier * movementAPI.CurrentVelocity.y);
+                isJumping = false;
+            }
+            else if (movementAPI.CurrentVelocity.y < -0.01f)
+            {
+                isJumping = false;
+            }
+        }
     }
 
     public void CloseAirDrag()

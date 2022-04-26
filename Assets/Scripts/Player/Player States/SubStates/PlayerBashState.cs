@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBashState : PlayerAbilityState
@@ -16,8 +14,8 @@ public class PlayerBashState : PlayerAbilityState
     private bool isTouchingWall;
     private bool bashInputStop;
 
-    public PlayerBashState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName)
-        : base(player, stateMachine, playerData, animBoolName)
+    public PlayerBashState(Player playerInstance, string animationBoolName)
+        : base(playerInstance, animationBoolName)
     {
         CanBash = true;
     }
@@ -47,7 +45,7 @@ public class PlayerBashState : PlayerAbilityState
     {
         base.Exit();
 
-        player.RB2D.drag = 0.0f;
+        movementAPI.RB2D.drag = 0.0f;
 
         if (core.Movement.CurrentVelocity.y > playerData.endBashMaxYVelocity)
         {
@@ -94,7 +92,7 @@ public class PlayerBashState : PlayerAbilityState
 
                     player.transform.position = core.CollisionSenses.BashAbleObj.Transform.position;
                     core.Movement.SetVelocityZero();
-                    player.RB2D.drag = playerData.bashDrag;
+                    movementAPI.RB2D.drag = playerData.bashDrag;
 
                     player.BashDirectionIndicator.gameObject.SetActive(false);
 

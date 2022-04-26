@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWallGrabState : PlayerTouchingWallState
 {
     private Vector2 holdPosition;
 
-    public PlayerWallGrabState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName)
+    public PlayerWallGrabState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName)
     {
     }
 
@@ -27,11 +25,11 @@ public class PlayerWallGrabState : PlayerTouchingWallState
         {
             HoldPosition();
             
-            if (yInput > 0)
+            if (grabInput && yInput > 0)
             {
                 stateMachine.ChangeState(player.WallClimbState);
             }
-            else if (yInput < 0 || !grabInput)
+            else if (!grabInput || yInput < 0)
             {
                 stateMachine.ChangeState(player.WallSlideState);
             }
@@ -40,8 +38,7 @@ public class PlayerWallGrabState : PlayerTouchingWallState
 
     private void HoldPosition()
     {
+        movementAPI.SetVelocityZero();            // Keeps the cinemachine camera focus on the player
         player.transform.position = holdPosition;
-
-        core.Movement.SetVelocityZero();   // Keeps the cinemachine camera focus on the player
     }
 }

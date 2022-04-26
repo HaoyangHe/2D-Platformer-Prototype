@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWallSlideState : PlayerTouchingWallState
 {
-    public PlayerWallSlideState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName)
+    public PlayerWallSlideState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName)
     {
     }
 
@@ -15,11 +13,15 @@ public class PlayerWallSlideState : PlayerTouchingWallState
 
         if (!isExitingState)
         {
-            core.Movement.SetVelocityY(-playerData.wallSlideVelocity);
+            movementAPI.SetVelocityY(-playerData.wallSlideVelocity);
 
-            if (grabInput && yInput != -1 && !isExitingState)
+            if (grabInput && yInput == 0)
             {
                 stateMachine.ChangeState(player.WallGrabState);
+            }
+            else if (grabInput && yInput > 0)
+            {
+                stateMachine.ChangeState(player.WallClimbState);
             }
         }
     }

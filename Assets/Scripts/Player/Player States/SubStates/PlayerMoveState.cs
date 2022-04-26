@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMoveState : PlayerGroundedState
 {
-    public PlayerMoveState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName) 
+    public PlayerMoveState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName) 
     {  
     }
 
@@ -23,10 +21,10 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.LogicUpdate();
 
-        core.Movement.CheckIfShouldFlip(xInput);
-        core.Movement.SetVelocityX(xInput * playerData.movementVelocity);
+        movementAPI.CheckIfShouldFlip(xInput);
+        movementAPI.SetVelocityX(xInput * playerData.movementVelocity);
 
-        if (xInput == 0 && !isExitingState)
+        if (xInput == 0 && !isExitingState)    
         {
             stateMachine.ChangeState(player.IdleState);
         } 

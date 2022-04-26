@@ -650,13 +650,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636568223}
+  - component: {fileID: 636568218}
+  - component: {fileID: 636568219}
+  - component: {fileID: 636568217}
+  - component: {fileID: 636568216}
   - component: {fileID: 636568222}
   - component: {fileID: 636568221}
   - component: {fileID: 636568220}
-  - component: {fileID: 636568219}
-  - component: {fileID: 636568218}
-  - component: {fileID: 636568217}
-  - component: {fileID: 636568216}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -708,7 +708,7 @@ Rigidbody2D:
   m_GravityScale: 4
   m_Material: {fileID: 6200000, guid: b60797e692714aa4e9a4cc7f1331b139, type: 2}
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!95 &636568218
@@ -64943,8 +64943,8 @@ MonoBehaviour:
   wallCheck: {fileID: 548000069}
   ledgeCheck: {fileID: 615925131}
   groundCheckRadius: 0.3
-  bashCheckRadius: 2
   wallCheckDistance: 0.5
+  bashCheckRadius: 2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64

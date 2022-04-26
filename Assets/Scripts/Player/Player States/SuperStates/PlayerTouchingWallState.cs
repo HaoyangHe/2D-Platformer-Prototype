@@ -1,50 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerTouchingWallState : PlayerState
 {
+    // Player Inputs
+    protected int xInput;
+    protected int yInput;
+    protected bool jumpInput;
+    protected bool grabInput;
+
+    // Collision Senses
     protected bool isGrounded;
     protected bool isTouchingWall;
     protected bool isTouchingLedge;
-    protected bool grabInput;
-    protected bool jumpInput;
-    protected int xInput;
-    protected int yInput;
 
-    private bool coyoteTime;
-    
-    public PlayerTouchingWallState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName)
+    private bool coyoteTime;        // Player can still leave the wall after touching it
+                                    // within a very short period of time. Instead of changing
+                                    // into WallSlide state and stick to the wall immediately.
+
+    public PlayerTouchingWallState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName)
     {
     }
 
     public override void Enter()
     {
         base.Enter();
+
+        player.JumpState.ResetAmountOfJumpsLeft();
+
+        if (stateMachine.LastState is PlayerInAirState && stateMachine.CurrentState is PlayerWallSlideState)
+        {
+            coyoteTime = true;
+        }
     }
 
     public override void Exit()
     {
         base.Exit();
+
+        coyoteTime = false;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        CheckCoyoteTime();
-
         xInput = player.InputHandler.NormInputX;
         yInput = player.InputHandler.NormInputY;
-        grabInput = player.InputHandler.GrabInput;
         jumpInput = player.InputHandler.JumpInput;
+        grabInput = player.InputHandler.GrabInput;
 
-        if (jumpInput && xInput != core.Movement.FacingDirection)
+        CheckCoyoteTime();
+
+        if (jumpInput && xInput != movementAPI.FacingDirection)
         {
             stateMachine.ChangeState(player.WallJumpState);
         }
-        else if (!isTouchingLedge)
+        else if (isTouchingWall && !isTouchingLedge && !isGrounded)
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
@@ -52,28 +64,27 @@ public class PlayerTouchingWallState : PlayerState
         {
             stateMachine.ChangeState(player.IdleState);
         }
-        else if (!isTouchingWall || xInput * core.Movement.FacingDirection < 0)
+        else if (!isTouchingWall)
+        { 
+            stateMachine.ChangeState(player.InAirState);
+        }
+        else if (xInput * movementAPI.FacingDirection < 0)
         {
-            if (CheckGetOfWall() || coyoteTime)
+            if (coyoteTime || IsXInputTimeEnough())
             {
-                core.Movement.CheckIfShouldFlip(xInput);            
+                movementAPI.CheckIfShouldFlip(xInput);
                 stateMachine.ChangeState(player.InAirState);
             }
         }
-    }
-
-    public override void PhysicsUpdate()
-    {
-       base.PhysicsUpdate();
     }
 
     public override void DoChecks()
     {
         base.DoChecks();
 
-        isGrounded = core.CollisionSenses.IsGrounded;
-        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
-        isTouchingLedge = core.CollisionSenses.IsTouchingLedge;
+        isGrounded = collisionSenser.IsGrounded;
+        isTouchingWall = collisionSenser.IsTouchingWallFront;
+        isTouchingLedge = collisionSenser.IsTouchingLedge;
 
         if (isTouchingWall && !isTouchingLedge)
         {
@@ -81,7 +92,7 @@ public class PlayerTouchingWallState : PlayerState
         }
     }
 
-    private bool CheckGetOfWall()
+    private bool IsXInputTimeEnough()
     {
         return Time.time >= player.InputHandler.XInputStartTime + playerData.getOfWallTime;
     }
@@ -92,10 +103,5 @@ public class PlayerTouchingWallState : PlayerState
         {
             coyoteTime = false;
         }
-    }
-
-    public void StartCoyoteTime() 
-    {
-        coyoteTime = true;
     }
 }

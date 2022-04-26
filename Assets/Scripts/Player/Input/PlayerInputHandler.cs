@@ -21,14 +21,9 @@ public class PlayerInputHandler : MonoBehaviour
     public float XInputStartTime { get; private set; }
     public float YInputStartTime { get; private set; }
 
-    [SerializeField]
-    private float xInputTolerance = 0.5f;
-    
-    [SerializeField]
-    private float yInputTolerance = 0.5f;
-    
-    [SerializeField]
-    private float jumpInputHoldTime = 0.2f;
+    [SerializeField] private float xInputTolerance = 0.5f;
+    [SerializeField] private float yInputTolerance = 0.5f;
+    [SerializeField] private float jumpInputHoldTime = 0.2f;
 
     private float jumpInputStartTime;
 

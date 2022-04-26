@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerJumpState : PlayerAbilityState
 {
     private int amountOfJumpsLeft;
-    
-    public PlayerJumpState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName)
-        : base(player, stateMachine, playerData, animBoolName)
+
+    public PlayerJumpState(Player playerInstance, string animationBoolName)
+        : base(playerInstance, animationBoolName)
     {
         amountOfJumpsLeft = playerData.amountOfJumps;
     }
@@ -15,10 +13,10 @@ public class PlayerJumpState : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
-        player.InputHandler.UseJumpInput();
-        player.InAirState.SetIsJumping();
 
-        core.Movement.SetVelocityY(playerData.jumpVelocity);
+        player.InputHandler.UseJumpInput();
+
+        movementAPI.SetVelocityY(playerData.jumpVelocity);
         amountOfJumpsLeft--;
         isAbilityDone = true;
     }

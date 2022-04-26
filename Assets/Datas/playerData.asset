@@ -18,9 +18,6 @@ MonoBehaviour:
   wallJumpVelocity: 20
   wallJumpTime: 0.4
   wallJumpAngle: {x: 1, y: 2}
-  wallHopVelocity: 16
-  wallHopTime: 0.2
-  wallHopAngle: {x: 1, y: 2}
   coyoteTimeInAir: 0.2
   startDargYVelocity: 13
   maxFallingVelocity: 30
@@ -37,7 +34,7 @@ MonoBehaviour:
   getOfWallTime: 0.5
   wallClimbVelocity: 3
   startOffset: {x: 0.35, y: 0.95}
-  stopOffset: {x: 0.4, y: 1}
+  endOffset: {x: 0.4, y: 1}
   maxHoldTime: 1
   holdTimeScale: 0
   bashTime: 0.03
@@ -46,14 +43,4 @@ MonoBehaviour:
   bashDrag: 10
   endBashMaxYVelocity: 20
   endBashYUpMultiplier: 0.7
-  backwardVelocityMultiplier: 0.5
   distBetweenAfterImages: 0.8
-  groundCheckRadius: 0.3
-  wallCheckDistance: 0.5
-  bashCheckRadius: 2
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  whatIsInteractable:
-    serializedVersion: 2
-    m_Bits: 128

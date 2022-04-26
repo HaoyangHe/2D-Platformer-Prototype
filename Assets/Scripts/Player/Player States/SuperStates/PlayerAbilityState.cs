@@ -1,20 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAbilityState : PlayerState
 {
-    protected bool isAbilityDone;
+    protected bool isAbilityDone;   // PlayerAbilityStates can only change to other states if isAbilityDone is set to true.
 
-    private bool grabInput;
-    private bool bashInput;
+    // Collision Senses
     private bool isGrounded;
-    private bool isTouchingWall;
-    private bool isTouchingLedge;
-    private bool isNearBashAble;
     
-    public PlayerAbilityState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) 
-        : base(player, stateMachine, playerData, animBoolName)
+    public PlayerAbilityState(Player playerInstance, string animationBoolName) 
+        : base(playerInstance, animationBoolName)
     {
     }
 
@@ -34,35 +28,16 @@ public class PlayerAbilityState : PlayerState
     {
         base.LogicUpdate();
 
-        grabInput = player.InputHandler.GrabInput;
-        bashInput = player.InputHandler.BashInput;
-
-        DoChecks();
-
-        if (isGrounded && core.Movement.CurrentVelocity.y < 0.01f)
+        if (isAbilityDone)
         {
-            stateMachine.ChangeState(player.IdleState);
-        }
-        else if (isTouchingWall && !isTouchingLedge && !isGrounded)
-        {
-            stateMachine.ChangeState(player.LedgeClimbState);
-        } 
-        else if (isTouchingWall && isTouchingLedge && grabInput)
-        {
-            stateMachine.ChangeState(player.WallGrabState);
-        }
-        else if (isTouchingWall && core.Movement.CurrentVelocity.y < -0.01f)
-        {
-            player.WallSlideState.StartCoyoteTime();
-            stateMachine.ChangeState(player.WallSlideState);
-        }
-        else if (isNearBashAble && bashInput)
-        {
-            stateMachine.ChangeState(player.BashState);
-        }
-        else if (isAbilityDone)
-        {
-            stateMachine.ChangeState(player.InAirState);
+            if (isGrounded && movementAPI.CurrentVelocity.y < 0.01f)    // Player falls down and lands on the ground.
+            {
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else
+            {
+                stateMachine.ChangeState(player.InAirState);
+            }
         }
     }
 
@@ -74,14 +49,7 @@ public class PlayerAbilityState : PlayerState
     public override void DoChecks()
     {
         base.DoChecks();
-        isGrounded = core.CollisionSenses.IsGrounded;
-        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
-        isTouchingLedge = core.CollisionSenses.IsTouchingLedge;
-        isNearBashAble = core.CollisionSenses.CheckIfNearBashAble();
 
-        if (isTouchingWall && !isTouchingLedge)
-        {
-            player.LedgeClimbState.SetDetectedPosition(player.transform.position);
-        }
+        isGrounded = collisionSenser.IsGrounded;
     }
 }

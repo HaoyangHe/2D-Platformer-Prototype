@@ -1,25 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWallJumpState : PlayerAbilityState
 {
+    // Collision Senses
     private bool isTouchingWall;
+
     private int wallJumpDirection;
     
-    public PlayerWallJumpState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName)
-        : base(player, stateMachine, playerData, animBoolName)
+    public PlayerWallJumpState(Player playerInstance, string animationBoolName)
+        : base(playerInstance, animationBoolName)
     {
     }
 
     public override void Enter()
     {
         base.Enter();
+
         player.InputHandler.UseJumpInput();
         
         DetermineWallJumpDirection(isTouchingWall);
-        core.Movement.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
-        core.Movement.CheckIfShouldFlip(wallJumpDirection);
+        movementAPI.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
+        movementAPI.CheckIfShouldFlip(wallJumpDirection);
 
         player.JumpState.ResetAmountOfJumpsLeft();
         player.JumpState.DecreaseAmountOfJumpsLeft();
@@ -29,8 +30,8 @@ public class PlayerWallJumpState : PlayerAbilityState
     {
         base.LogicUpdate();
 
-        player.Anim.SetFloat("xVelocity", Mathf.Abs(core.Movement.CurrentVelocity.x));
-        player.Anim.SetFloat("yVelocity", core.Movement.CurrentVelocity.y);
+        player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x));
+        player.Anim.SetFloat("yVelocity", movementAPI.CurrentVelocity.y);
         
         if (Time.time >= startTime + playerData.wallJumpTime)
         {
@@ -42,18 +43,18 @@ public class PlayerWallJumpState : PlayerAbilityState
     {
         base.DoChecks();
 
-        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
+        isTouchingWall = collisionSenser.IsTouchingWallFront;
     }
 
     public void DetermineWallJumpDirection(bool isTouchingWall)
     {
         if (isTouchingWall)
         {
-            wallJumpDirection = -core.Movement.FacingDirection;
+            wallJumpDirection = -movementAPI.FacingDirection;
         }
         else 
         {
-            wallJumpDirection = core.Movement.FacingDirection;
+            wallJumpDirection = movementAPI.FacingDirection;
         }
     }
 }

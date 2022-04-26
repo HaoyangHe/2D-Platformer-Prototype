@@ -7,21 +7,14 @@ public class Movement : CoreComponent
     public Rigidbody2D RB2D { get; private set; }
     public int FacingDirection { get; private set; }
     public Vector2 CurrentVelocity { get; private set; }
-    private PlayerStateMachine StateMachine;
 
     private Vector2 workspace;
 
     protected override void Awake()
     {
         base.Awake();
-        RB2D = GetComponentInParent<Rigidbody2D>();
+        RB2D = GetComponentInParent<Rigidbody2D>();         // Find the Rigidbody2D that attached to the player. 
         FacingDirection = 1;
-
-    }
-
-    private void Start()
-    {
-        StateMachine = GameObject.Find("Player").GetComponent<Player>().StateMachine;
     }
 
     public void LogicUpdate()
@@ -76,7 +69,6 @@ public class Movement : CoreComponent
         if (xInput != 0 && xInput != FacingDirection)
         {
             Flip();
-            StateMachine.CurrentState.DoChecks();
             return true;
         }
 
