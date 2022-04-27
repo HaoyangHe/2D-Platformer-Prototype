@@ -12,23 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f4d30f8cfed1848ba5a92697f1c2a2, type: 3}
   m_Name: playerData
   m_EditorClassIdentifier: 
-  movementVelocity: 12
+  movementVelocity: 13.5
+  movementLerp: 0.2
   jumpVelocity: 17
   amountOfJumps: 2
   wallJumpVelocity: 20
   wallJumpTime: 0.4
   wallJumpAngle: {x: 1, y: 2}
   coyoteTimeInAir: 0.2
-  startDargYVelocity: 13
-  maxFallingVelocity: 30
   variableJumpHeightMultiplier: 0.5
-  lowSpeedXMultiplier: 0.45
-  airMovementForce: 50
-  highSpeedXMultiplier: 0.88
-  highSpeedFlipXMultiplier: 0.3
-  lowSpeedFlipXMultiplier: 0.8
-  airDragYMultiplier: 0.95
-  fallingDragYMultiplier: 0.3
+  fallingMultiplier: 2.5
+  airDragMultiplier: 0.45
+  airFlipMultiplier: 0.6
+  airMovementAcceleration: 45
   coyoteTimeSlide: 0.1
   wallSlideVelocity: 2
   getOfWallTime: 0.5

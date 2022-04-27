@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerBashState : PlayerAbilityState
 {
-    public bool WasBash { get; private set; }
     public bool CanBash { get; private set; }
     
     private Vector2 bashDirction;
@@ -10,8 +9,6 @@ public class PlayerBashState : PlayerAbilityState
     
     private int xInput;
     private bool isHolding;
-    private bool isGrounded;
-    private bool isTouchingWall;
     private bool bashInputStop;
 
     public PlayerBashState(Player playerInstance, string animationBoolName)
@@ -32,25 +29,21 @@ public class PlayerBashState : PlayerAbilityState
         player.JumpState.DecreaseAmountOfJumpsLeft();
         player.BashDirectionIndicator.gameObject.SetActive(true);
 
-        core.CollisionSenses.BashAbleObj.BeforeBash();
-        player.BashDirectionIndicator.position = core.CollisionSenses.BashAbleObj.Transform.position;
+        collisionSenser.BashAbleObj.BeforeBash();
+        player.BashDirectionIndicator.position = collisionSenser.BashAbleObj.Transform.position;
 
-        bashDirction = core.Movement.FacingDirection * Vector2.one;
+        bashDirction = movementAPI.FacingDirection * Vector2.one;
         isHolding = true;
         CanBash = false;
-        WasBash = true;
     }
 
     public override void Exit()
     {
         base.Exit();
 
-        movementAPI.RB2D.drag = 0.0f;
-
-        if (core.Movement.CurrentVelocity.y > playerData.endBashMaxYVelocity)
+        if (movementAPI.CurrentVelocity.y > playerData.endBashMaxYVelocity)
         {
-            
-            core.Movement.SetVelocityY(core.Movement.CurrentVelocity.y * playerData.endBashYUpMultiplier);
+            movementAPI.SetVelocityY(movementAPI.CurrentVelocity.y * playerData.endBashYUpMultiplier);
         }
     }
 
@@ -64,7 +57,7 @@ public class PlayerBashState : PlayerAbilityState
             {
                 bashDirctionInput = player.InputHandler.RawBashDirecionInput;
                 bashInputStop = player.InputHandler.BashInputStop;
-                player.BashDirectionIndicator.position = core.CollisionSenses.BashAbleObj.Transform.position;
+                player.BashDirectionIndicator.position = collisionSenser.BashAbleObj.Transform.position;
                 xInput = player.InputHandler.NormInputX;
                 
                 if (bashDirctionInput != Vector2.zero)
@@ -83,26 +76,26 @@ public class PlayerBashState : PlayerAbilityState
 
                     if (xInput * bashDirction.x >= 0)
                     {
-                        core.Movement.CheckIfShouldFlip(bashDirction.x > 0 ? 1 : -1);
+                        movementAPI.CheckIfShouldFlip(bashDirction.x > 0 ? 1 : -1);
                     }
                     else
                     {
-                        core.Movement.CheckIfShouldFlip(xInput > 0 ? 1 : -1);
+                        movementAPI.CheckIfShouldFlip(xInput > 0 ? 1 : -1);
                     }
 
-                    player.transform.position = core.CollisionSenses.BashAbleObj.Transform.position;
-                    core.Movement.SetVelocityZero();
-                    movementAPI.RB2D.drag = playerData.bashDrag;
+                    player.transform.position = collisionSenser.BashAbleObj.Transform.position;
+                    movementAPI.SetVelocityZero();
+                    // movementAPI.RB2D.drag = playerData.bashDrag;
 
                     player.BashDirectionIndicator.gameObject.SetActive(false);
 
-                    core.CollisionSenses.BashAbleObj.SetImpulse(-bashDirction * playerData.bashImpulse);
-                    core.CollisionSenses.BashAbleObj.AfterBash();
+                    collisionSenser.BashAbleObj.SetImpulse(-bashDirction * playerData.bashImpulse);
+                    collisionSenser.BashAbleObj.AfterBash();
                 }
             }
             else
             {
-                core.Movement.SetVelocity(playerData.bashVelocity, bashDirction);
+                movementAPI.SetVelocity(playerData.bashVelocity, bashDirction);
 
                 if (Time.time >= startTime + playerData.bashTime)
                 {
@@ -110,8 +103,8 @@ public class PlayerBashState : PlayerAbilityState
                 }
             }
 
-            player.Anim.SetFloat("xVelocity", Mathf.Abs(core.Movement.CurrentVelocity.x));
-            player.Anim.SetFloat("yVelocity", core.Movement.CurrentVelocity.y);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x));
+            player.Anim.SetFloat("yVelocity", movementAPI.CurrentVelocity.y);
         }
     }
 
@@ -123,13 +116,5 @@ public class PlayerBashState : PlayerAbilityState
     public override void DoChecks()
     {
         base.DoChecks();
-
-        isGrounded = core.CollisionSenses.IsGrounded;
-        isTouchingWall = core.CollisionSenses.IsTouchingWallFront;
-    }
-
-    public void ResetWasBash()
-    {
-        WasBash = false;
     }
 }

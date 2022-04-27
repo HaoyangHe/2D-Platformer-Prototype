@@ -74,7 +74,10 @@ public class CollisionSenses : CoreComponent
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         // Gizmos.DrawWireSphere(transform.position, bashCheckRadius);
-        Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + core.Movement.FacingDirection * wallCheckDistance, wallCheck.position.y, wallCheck.position.z));
-        Gizmos.DrawLine(ledgeCheck.position, new Vector3(ledgeCheck.position.x + core.Movement.FacingDirection * wallCheckDistance, ledgeCheck.position.y, ledgeCheck.position.z));
+        if (core != null)
+        {
+            Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + core.Movement.FacingDirection * wallCheckDistance, wallCheck.position.y, wallCheck.position.z));
+            Gizmos.DrawLine(ledgeCheck.position, new Vector3(ledgeCheck.position.x + core.Movement.FacingDirection * wallCheckDistance, ledgeCheck.position.y, ledgeCheck.position.z));
+        }
     }
 }

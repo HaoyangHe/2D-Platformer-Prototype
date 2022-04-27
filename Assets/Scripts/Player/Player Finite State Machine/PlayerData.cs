@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "newPlayerData", menuName = "Data/Player Data/Base Data")]
@@ -7,7 +5,8 @@ public class PlayerData : ScriptableObject
 {
     [Header("Move State")]
     public float movementVelocity = 12.0f;
-    
+    public float movementLerp = 1.0f;
+
     [Header("Jump State")]
     public float jumpVelocity = 17.0f;
     public int amountOfJumps = 1;
@@ -19,16 +18,11 @@ public class PlayerData : ScriptableObject
 
     [Header("In Air State")]
     public float coyoteTimeInAir = 0.2f;
-    public float startDargYVelocity = 13.0f;
-    public float maxFallingVelocity = 35.0f;
     public float variableJumpHeightMultiplier = 0.5f;
-    public float lowSpeedXMultiplier = 0.45f;
-    public float airMovementForce = 50.0f;
-    public float highSpeedXMultiplier = 0.88f;
-    public float highSpeedFlipXMultiplier = 0.3f;
-    public float lowSpeedFlipXMultiplier = 0.8f;
-    public float airDragYMultiplier = 0.95f;
-    public float fallingDragYMultiplier = 0.95f;
+    public float fallingMultiplier = 2.5f;
+    public float airDragMultiplier = 0.45f;
+    public float airFlipMultiplier = 0.3f;
+    public float airMovementAcceleration = 45.0f;
 
     [Header("Wall Slide State")]
     public float coyoteTimeSlide = 0.1f;

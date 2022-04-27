@@ -22,7 +22,10 @@ public class PlayerMoveState : PlayerGroundedState
         base.LogicUpdate();
 
         movementAPI.CheckIfShouldFlip(xInput);
-        movementAPI.SetVelocityX(xInput * playerData.movementVelocity);
+
+        movementAPI.SetVelocityX(Mathf.Lerp(movementAPI.CurrentVelocity.x,
+                                            xInput * playerData.movementVelocity,
+                                            playerData.movementLerp));
 
         if (xInput == 0 && !isExitingState)    
         {
@@ -32,7 +35,7 @@ public class PlayerMoveState : PlayerGroundedState
 
     public override void PhysicsUpdate()
     {
-       base.PhysicsUpdate();
+        base.PhysicsUpdate();
     }
 
     public override void DoChecks()

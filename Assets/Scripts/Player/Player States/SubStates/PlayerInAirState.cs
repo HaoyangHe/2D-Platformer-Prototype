@@ -18,11 +18,7 @@ public class PlayerInAirState : PlayerState
     
     private bool coyoteTime;
     private bool isJumping;
-
-    private bool hasDrag;
-    private bool isAbleToMove;
-    private bool xVelocityDrag;
-    private bool yVelocityDrag;
+    private bool hasDragged;
     
     public PlayerInAirState(Player playerInstance, string animationBoolName) 
         : base(playerInstance, animationBoolName)
@@ -33,10 +29,7 @@ public class PlayerInAirState : PlayerState
     {
         base.Enter();
 
-        hasDrag = false;
-        isAbleToMove = false;
-        xVelocityDrag = true;
-        yVelocityDrag = false;
+        hasDragged = false;
 
         if (stateMachine.LastState is PlayerJumpState)
         {
@@ -67,45 +60,67 @@ public class PlayerInAirState : PlayerState
         jumpInputStop = player.InputHandler.JumpInputStop;
 
         CheckCoyoteTime();          
-        CheckJumpMultiplier();      
+        CheckJumpMultiplier();
 
-        if (isGrounded && movementAPI.CurrentVelocity.y < 0.01f) 
+        if (isGrounded && xInput != 0 && movementAPI.CurrentVelocity.y < 0.01f)
+        {
+            stateMachine.ChangeState(player.MoveState);
+        }
+        else if (isGrounded && movementAPI.CurrentVelocity.y < 0.01f)
         {
             stateMachine.ChangeState(player.LandState);
         }
-        else if (isTouchingWall && !isTouchingLedge && !isGrounded) 
+        else if (isTouchingWall && !isTouchingLedge && !isGrounded)
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
-        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != movementAPI.FacingDirection)))    
+        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != movementAPI.FacingDirection)))
         {
             stateMachine.ChangeState(player.WallJumpState);
         }
-        else if (jumpInput && player.JumpState.CanJump())   
+        else if (jumpInput && player.JumpState.CanJump())
         {
             stateMachine.ChangeState(player.JumpState);
         }
-        else if (isTouchingWall && isTouchingLedge && grabInput) 
+        else if (isTouchingWall && isTouchingLedge && grabInput)
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
-        else if (isTouchingWall && movementAPI.CurrentVelocity.y < -0.01f) 
+        else if (isTouchingWall && movementAPI.CurrentVelocity.y < -0.01f)
         {
             stateMachine.ChangeState(player.WallSlideState);
         }
-        else if (isNearBashAble && bashInput)   
+        else if (isNearBashAble && bashInput)
         {
             stateMachine.ChangeState(player.BashState);
         }
-        else 
+        else
         {
-            isAbleToMove = true;
-
-            if (player.BashState.WasBash)
+            if (xInput != 0)
             {
-                hasDrag = true;
-                yVelocityDrag = true;
-                player.BashState.ResetWasBash();
+                if (movementAPI.CheckIfShouldFlip(xInput))
+                {
+                    movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.airFlipMultiplier);
+                }
+
+                if (Mathf.Abs(movementAPI.CurrentVelocity.x) < playerData.movementVelocity)
+                {
+                    movementAPI.AddVelocityX(xInput * playerData.airMovementAcceleration * Time.deltaTime);
+                }
+                else
+                {
+                    movementAPI.SetVelocityX(xInput * playerData.movementVelocity);
+                }
+            }
+
+            if (movementAPI.CurrentVelocity.y <= 0)
+            {
+                movementAPI.AddVelocityY(Physics2D.gravity.y * (playerData.fallingMultiplier - 1) * Time.deltaTime);
+            }
+
+            if (stateMachine.LastState is PlayerGroundedState && !hasDragged && xInput == 0)
+            {
+                movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.airDragMultiplier);
             }
 
             player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x));
@@ -116,46 +131,6 @@ public class PlayerInAirState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-
-        if (isAbleToMove)
-        {
-            bool hasFlip = movementAPI.CheckIfShouldFlip(xInput);
-            
-            if (xInput != 0)
-            {
-                Vector2 forceToAdd = new Vector2(xInput * playerData.airMovementForce, 0.0f);
-                if (hasFlip)
-                {
-                    if (Mathf.Abs(movementAPI.CurrentVelocity.x) > playerData.movementVelocity)
-                    {
-                        movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.highSpeedFlipXMultiplier);
-                    }
-                    else
-                    {
-                        movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.lowSpeedFlipXMultiplier);
-                    }
-                }
-                movementAPI.AddForce(forceToAdd);
-            }
-
-            if (xVelocityDrag)
-            {
-                if (Mathf.Abs(movementAPI.CurrentVelocity.x) > playerData.movementVelocity)
-                {
-                    movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.highSpeedXMultiplier);
-                }
-                else if (xInput == 0 && !hasDrag)
-                {
-                    hasDrag = true;
-                    movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.lowSpeedXMultiplier);
-                }
-            }
-
-            if (yVelocityDrag && movementAPI.CurrentVelocity.y > playerData.startDargYVelocity)
-            {
-                movementAPI.SetVelocityY(movementAPI.CurrentVelocity.y * playerData.airDragYMultiplier);
-            }
-        }
     }
 
     public override void DoChecks()
@@ -197,10 +172,5 @@ public class PlayerInAirState : PlayerState
                 isJumping = false;
             }
         }
-    }
-
-    public void CloseAirDrag()
-    {
-        hasDrag = true;
     }
 }
