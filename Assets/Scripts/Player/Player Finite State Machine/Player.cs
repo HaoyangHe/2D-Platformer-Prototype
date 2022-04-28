@@ -26,14 +26,11 @@ public class Player : MonoBehaviour
     public PlayerInputHandler InputHandler { get; private set; }
     public CoreComponentsManager Core { get; private set; }
     
-    public Transform BashDirectionIndicator { get; private set; }
-
     private void Awake() 
     {
-        Anim = GetComponent<Animator>();
         Core = GetComponentInChildren<CoreComponentsManager>();
+        Anim = GetComponent<Animator>();
         InputHandler = GetComponent<PlayerInputHandler>();
-        BashDirectionIndicator = transform.Find("BashDirectionIndicator");
     }
 
     private void Start() 

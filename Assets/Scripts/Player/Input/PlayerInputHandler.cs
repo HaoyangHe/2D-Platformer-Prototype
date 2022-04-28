@@ -7,10 +7,10 @@ public class PlayerInputHandler : MonoBehaviour
 {
     private PlayerInput playerInput;
     private Camera cam;
-    
+
     public Vector2 RawMovementInput { get; private set; }
     public Vector2 RawBashDirecionInput { get; private set; }
-    
+
     public int NormInputX { get; private set; }
     public int NormInputY { get; private set; }
     public bool JumpInput { get; private set; }
@@ -21,24 +21,30 @@ public class PlayerInputHandler : MonoBehaviour
     public float XInputStartTime { get; private set; }
     public float YInputStartTime { get; private set; }
 
+    public Transform BashDirectionIndicator;
+
     [SerializeField] private float xInputTolerance = 0.5f;
     [SerializeField] private float yInputTolerance = 0.5f;
     [SerializeField] private float jumpInputHoldTime = 0.2f;
+    [SerializeField] private float bashInputHoldTime = 1.0f;
 
     private float jumpInputStartTime;
+    private float bashInputStartTime;
 
-    private Transform BashDirectionIndicator;
+    private Vector2 workSpace;
     
     private void Start() 
     {
         playerInput = GetComponent<PlayerInput>();
-        cam = Camera.main;    
-        BashDirectionIndicator = transform.Find("BashDirectionIndicator");
+        cam = Camera.main;
+
+        RawBashDirecionInput.Set(1, 1);
     }
 
     private void Update() 
     {
-        CheckJumpInputHoldTime();           
+        CheckJumpInputHoldTime();
+        CheckBashInputHoldTime();
     }
 
     public void OnMoveInput(InputAction.CallbackContext context) 
@@ -100,40 +106,45 @@ public class PlayerInputHandler : MonoBehaviour
         {
             BashInput = true;
             BashInputStop = false;
+            bashInputStartTime = Time.unscaledTime;
         }
 
         if (context.canceled)
         {
-            BashInput = false;
             BashInputStop = true;
         }
     }
 
     public void OnBashDirectionInput(InputAction.CallbackContext context)
     {
-        RawBashDirecionInput = context.ReadValue<Vector2>();
+        workSpace = context.ReadValue<Vector2>();
         
         if (playerInput.currentControlScheme == "Keyboard")
         {
-            RawBashDirecionInput = RawBashDirecionInput - (Vector2)cam.WorldToScreenPoint(BashDirectionIndicator.position);
+            workSpace = workSpace - (Vector2)cam.WorldToScreenPoint(BashDirectionIndicator.position);
         }
+
+        RawBashDirecionInput = workSpace == Vector2.zero ? RawBashDirecionInput : workSpace;
     }
 
-    public void UseJumpInput()
-    {
-        JumpInput = false;
-    }
+    public void UseJumpInput() => JumpInput = false;
 
-    public void UseBashInput()
-    {
-        BashInput = false;
-    }
+    public void UseBashInput() => BashInput = false;
 
     private void CheckJumpInputHoldTime()
     {
         if (Time.time >= jumpInputStartTime + jumpInputHoldTime)
         {
             JumpInput = false;
+        }
+    }
+
+    private void CheckBashInputHoldTime()
+    {
+        if (Time.unscaledTime >= bashInputStartTime + bashInputHoldTime)
+        {
+            BashInput = false;
+            BashInputStop = true;
         }
     }
 }

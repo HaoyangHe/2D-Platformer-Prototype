@@ -655,8 +655,8 @@ GameObject:
   - component: {fileID: 636568217}
   - component: {fileID: 636568216}
   - component: {fileID: 636568222}
-  - component: {fileID: 636568221}
   - component: {fileID: 636568220}
+  - component: {fileID: 636568221}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -793,9 +793,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c85903ec4ffbf5848b99668f8ec06379, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BashDirectionIndicator: {fileID: 1157794350}
   xInputTolerance: 0.5
   yInputTolerance: 0.5
   jumpInputHoldTime: 0.2
+  bashInputHoldTime: 1
 --- !u!114 &636568221
 MonoBehaviour:
   m_ObjectHideFlags: 0

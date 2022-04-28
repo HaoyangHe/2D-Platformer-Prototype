@@ -47,27 +47,24 @@ public class CollisionSenses : CoreComponent
         get => Physics2D.Raycast(ledgeCheck.position, core.Movement.FacingDirection * Vector2.right, wallCheckDistance, whatIsGround);
     }
 
-    public bool CheckIfNearBashAble()
+    public bool IsNearBashAble
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, bashCheckRadius, whatIsInteractable);
-
-        foreach (Collider2D hit in hits)
+        get 
         {
-            if (hit.tag == "BashAble")
+            Collider2D obj = Physics2D.OverlapCircle(transform.position, bashCheckRadius, whatIsInteractable);
+            
+            if (obj == null)
             {
-                BashAbleObj = hit.transform.gameObject.GetComponent<BashableObject>();
+                BashAbleObj?.Unlit();
+                return false;
+            }
+            else
+            {
+                BashAbleObj = obj.GetComponent<BashableObject>();
                 BashAbleObj.Lit();
                 return true;
             }
         }
-
-        if (BashAbleObj != null)
-        {
-            BashAbleObj.Unlit();
-            BashAbleObj = null;
-        }
-
-        return false;
     }
 
     private void OnDrawGizmos()

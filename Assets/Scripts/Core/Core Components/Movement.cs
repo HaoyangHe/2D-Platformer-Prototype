@@ -54,6 +54,19 @@ public class Movement : CoreComponent
         SetFinalVelocity();
     }
 
+    public void DecreaseVelocityX(float velocity)
+    {
+        if (FacingDirection == 1)
+        {
+            workspace.Set(Mathf.Clamp(CurrentVelocity.x - velocity, 0.0f, CurrentVelocity.x), CurrentVelocity.y);
+        }
+        else
+        {
+            workspace.Set(Mathf.Clamp(CurrentVelocity.x - velocity, CurrentVelocity.x, 0.0f), CurrentVelocity.y);
+        }
+        SetFinalVelocity();
+    }
+
     public void SetVelocityY(float velocity)
     {
         workspace.Set(CurrentVelocity.x, velocity);

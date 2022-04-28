@@ -2,49 +2,39 @@ using UnityEngine;
 
 public class PlayerBashState : PlayerAbilityState
 {
-    public bool CanBash { get; private set; }
-    
-    private Vector2 bashDirction;
-    private Vector2 bashDirctionInput;
-    
+    // Player Inputs
     private int xInput;
-    private bool isHolding;
     private bool bashInputStop;
+    private Vector2 bashDirection;
+
+    private bool isButtonHolding;
 
     public PlayerBashState(Player playerInstance, string animationBoolName)
         : base(playerInstance, animationBoolName)
     {
-        CanBash = true;
     }
 
     public override void Enter()
     {
         base.Enter();
-        
-        startTime = Time.unscaledTime;
-        Time.timeScale = playerData.holdTimeScale;
+
+        Time.timeScale = playerData.bashTimeScale;
 
         player.InputHandler.UseBashInput();
+        player.InputHandler.BashDirectionIndicator.position = collisionSenser.BashAbleObj.Transform.position;
+        player.InputHandler.BashDirectionIndicator.gameObject.SetActive(true);
+
         player.JumpState.ResetAmountOfJumpsLeft();
         player.JumpState.DecreaseAmountOfJumpsLeft();
-        player.BashDirectionIndicator.gameObject.SetActive(true);
+
+        isButtonHolding = true;
 
         collisionSenser.BashAbleObj.BeforeBash();
-        player.BashDirectionIndicator.position = collisionSenser.BashAbleObj.Transform.position;
-
-        bashDirction = movementAPI.FacingDirection * Vector2.one;
-        isHolding = true;
-        CanBash = false;
     }
 
     public override void Exit()
     {
         base.Exit();
-
-        if (movementAPI.CurrentVelocity.y > playerData.endBashMaxYVelocity)
-        {
-            movementAPI.SetVelocityY(movementAPI.CurrentVelocity.y * playerData.endBashYUpMultiplier);
-        }
     }
 
     public override void LogicUpdate()
@@ -53,54 +43,32 @@ public class PlayerBashState : PlayerAbilityState
 
         if (!isExitingState)
         {
-            if (isHolding)
+            if (isButtonHolding)
             {
-                bashDirctionInput = player.InputHandler.RawBashDirecionInput;
-                bashInputStop = player.InputHandler.BashInputStop;
-                player.BashDirectionIndicator.position = collisionSenser.BashAbleObj.Transform.position;
                 xInput = player.InputHandler.NormInputX;
-                
-                if (bashDirctionInput != Vector2.zero)
-                {
-                    bashDirction = bashDirctionInput;
-                    bashDirction.Normalize();
-                }
+                bashInputStop = player.InputHandler.BashInputStop;
+                bashDirection = player.InputHandler.RawBashDirecionInput;
+                bashDirection.Normalize();
 
-                player.BashDirectionIndicator.rotation = Quaternion.AngleAxis(Mathf.Atan2(bashDirction.y, bashDirction.x) * Mathf.Rad2Deg, Vector3.forward);
-                
-                if (bashInputStop || Time.unscaledTime >= startTime + playerData.maxHoldTime)
+                player.InputHandler.BashDirectionIndicator.rotation = Quaternion.AngleAxis(Mathf.Atan2(bashDirection.y, bashDirection.x) * Mathf.Rad2Deg, Vector3.forward);
+
+                if (bashInputStop)
                 {
-                    isHolding = false;
+                    isButtonHolding = false;
+
                     Time.timeScale = 1.0f;
                     startTime = Time.time;
 
-                    if (xInput * bashDirction.x >= 0)
-                    {
-                        movementAPI.CheckIfShouldFlip(bashDirction.x > 0 ? 1 : -1);
-                    }
-                    else
-                    {
-                        movementAPI.CheckIfShouldFlip(xInput > 0 ? 1 : -1);
-                    }
-
+                    player.InputHandler.BashDirectionIndicator.gameObject.SetActive(false);
                     player.transform.position = collisionSenser.BashAbleObj.Transform.position;
-                    movementAPI.SetVelocityZero();
-                    // movementAPI.RB2D.drag = playerData.bashDrag;
 
-                    player.BashDirectionIndicator.gameObject.SetActive(false);
-
-                    collisionSenser.BashAbleObj.SetImpulse(-bashDirction * playerData.bashImpulse);
+                    collisionSenser.BashAbleObj.SetImpulse(-bashDirection * playerData.bashImpulse);
                     collisionSenser.BashAbleObj.AfterBash();
                 }
             }
-            else
+            else 
             {
-                movementAPI.SetVelocity(playerData.bashVelocity, bashDirction);
-
-                if (Time.time >= startTime + playerData.bashTime)
-                {
-                    isAbilityDone = true;
-                }
+                isAbilityDone = true;
             }
 
             player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x));
@@ -111,10 +79,5 @@ public class PlayerBashState : PlayerAbilityState
     public override void PhysicsUpdate()
     {
        base.PhysicsUpdate();
-    }
-
-    public override void DoChecks()
-    {
-        base.DoChecks();
     }
 }
