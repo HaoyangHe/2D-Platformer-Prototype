@@ -35,6 +35,14 @@ public class PlayerBashState : PlayerAbilityState
     public override void Exit()
     {
         base.Exit();
+
+        GameObject.Find("a").transform.position = player.transform.position;
+        movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.bashExitXMultiplier);
+
+        if (movementAPI.CurrentVelocity.y > 0)
+        {
+            movementAPI.SetVelocityY(movementAPI.CurrentVelocity.y * playerData.bashExitYMultiplier);
+        }
     }
 
     public override void LogicUpdate()
@@ -62,13 +70,27 @@ public class PlayerBashState : PlayerAbilityState
                     player.InputHandler.BashDirectionIndicator.gameObject.SetActive(false);
                     player.transform.position = collisionSenser.BashAbleObj.Transform.position;
 
+                    if (xInput * bashDirection.x >= 0)
+                    {
+                        movementAPI.CheckIfShouldFlip(bashDirection.x > 0 ? 1 : -1);
+                    }
+                    else
+                    {
+                        movementAPI.CheckIfShouldFlip(xInput);
+                    }
+
                     collisionSenser.BashAbleObj.SetImpulse(-bashDirection * playerData.bashImpulse);
                     collisionSenser.BashAbleObj.AfterBash();
                 }
             }
             else 
             {
-                isAbilityDone = true;
+                movementAPI.SetVelocity(playerData.bashVelocity, bashDirection);
+                
+                if (Time.time > startTime + playerData.bashTime)
+                { 
+                    isAbilityDone = true;
+                }
             }
 
             player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x));

@@ -18,7 +18,8 @@ public class PlayerInAirState : PlayerState
     
     private bool coyoteTime;
     private bool isJumping;
-    
+    private bool canApplyMovement;
+
     public PlayerInAirState(Player playerInstance, string animationBoolName) 
         : base(playerInstance, animationBoolName)
     {
@@ -28,6 +29,8 @@ public class PlayerInAirState : PlayerState
     {
         base.Enter();
 
+        canApplyMovement = true;
+
         if (stateMachine.LastState is PlayerJumpState)
         {
             isJumping = true;
@@ -35,6 +38,10 @@ public class PlayerInAirState : PlayerState
         else if (stateMachine.LastState is PlayerGroundedState)
         {
             coyoteTime = true;
+        }
+        else if (stateMachine.LastState is PlayerBashState)
+        {
+            canApplyMovement = false;
         }
     }
 
@@ -71,7 +78,7 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
-        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != movementAPI.FacingDirection)))
+        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != 0)))
         {
             stateMachine.ChangeState(player.WallJumpState);
         }
@@ -93,28 +100,54 @@ public class PlayerInAirState : PlayerState
         }
         else
         {
-            if (xInput != 0)
+            if (canApplyMovement)
             {
-                if (movementAPI.CheckIfShouldFlip(xInput))
+                if (xInput == 0)
                 {
-                    movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.airFlipMultiplier);
-                }
-
-                if (Mathf.Abs(movementAPI.CurrentVelocity.x) < playerData.movementVelocity)
-                {
-                    movementAPI.AddVelocityX(xInput * playerData.airMovementAcceleration * Time.deltaTime);
+                    movementAPI.DecreaseVelocityX(Mathf.Sign(movementAPI.CurrentVelocity.x) * 
+                                                  playerData.airDragDeceleration * Time.deltaTime);
                 }
                 else
                 {
-                    movementAPI.SetVelocityX(xInput * playerData.movementVelocity);
+                    if (movementAPI.CheckIfShouldFlip(xInput))
+                    {
+                        movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.airFlipMultiplier);
+                    }
+
+                    movementAPI.AddVelocityX(xInput * playerData.airMovementAcceleration * Time.deltaTime);
+
+                    if (Mathf.Abs(movementAPI.CurrentVelocity.x) > playerData.movementVelocity)
+                    {
+                        movementAPI.SetVelocityX(Mathf.Sign(movementAPI.CurrentVelocity.x) * playerData.movementVelocity);
+                    }
                 }
             }
             else
             {
-                movementAPI.DecreaseVelocityX(movementAPI.FacingDirection * playerData.airMovementDeceleration * Time.deltaTime);
+                if (xInput != 0)
+                {
+                    canApplyMovement = true;
+                    // movementAPI.CheckIfShouldFlip(xInput);
+                }
             }
 
-            if (movementAPI.CurrentVelocity.y <= 0)
+            if (movementAPI.CurrentVelocity.y > 0)
+            {
+                if (stateMachine.LastState is PlayerBashState)
+                {
+                    movementAPI.AddVelocityY(Physics2D.gravity.y * (playerData.bashFallingMultiplier - 1) * Time.deltaTime);
+                }
+                else if (stateMachine.LastState is PlayerWallJumpState)
+                { 
+                    movementAPI.AddVelocityY(Physics2D.gravity.y * (playerData.wallJumpFallingMultiplier - 1) * Time.deltaTime);
+                }
+
+                if (movementAPI.CurrentVelocity.y < 0)
+                {
+                    movementAPI.SetVelocityY(0.0f);
+                }
+            }
+            else if (movementAPI.CurrentVelocity.y <= 0)
             {
                 movementAPI.AddVelocityY(Physics2D.gravity.y * (playerData.fallingMultiplier - 1) * Time.deltaTime);
             }
@@ -127,6 +160,8 @@ public class PlayerInAirState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+
+
     }
 
     public override void DoChecks()

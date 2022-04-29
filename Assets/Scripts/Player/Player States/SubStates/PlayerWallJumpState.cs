@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerWallJumpState : PlayerAbilityState
 {
+    // Player Inputs
+    private int xInput;
+    
     // Collision Senses
     private bool isTouchingWall;
 
@@ -17,26 +20,23 @@ public class PlayerWallJumpState : PlayerAbilityState
         base.Enter();
 
         player.InputHandler.UseJumpInput();
-        
-        DetermineWallJumpDirection(isTouchingWall);
-        movementAPI.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
-        movementAPI.CheckIfShouldFlip(wallJumpDirection);
+        xInput = player.InputHandler.NormInputX;
+
+        if ((xInput * movementAPI.FacingDirection < 0 && isTouchingWall) || !isTouchingWall)
+        {
+            DetermineWallJumpDirection(isTouchingWall);
+            movementAPI.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
+            movementAPI.CheckIfShouldFlip(wallJumpDirection);
+        }
+        else if (movementAPI.CurrentVelocity.y <= 0)
+        {
+            movementAPI.SetVelocityY(playerData.wallJumpVerticalVelocity);
+        }
 
         player.JumpState.ResetAmountOfJumpsLeft();
         player.JumpState.DecreaseAmountOfJumpsLeft();
-    }
 
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-
-        player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x));
-        player.Anim.SetFloat("yVelocity", movementAPI.CurrentVelocity.y);
-        
-        if (Time.time >= startTime + playerData.wallJumpTime)
-        {
-            isAbilityDone = true;
-        }
+        isAbilityDone = true;
     }
 
     public override void DoChecks()

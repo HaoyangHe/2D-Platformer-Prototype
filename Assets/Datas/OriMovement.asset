@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3f4d30f8cfed1848ba5a92697f1c2a2, type: 3}
-  m_Name: playerData
+  m_Name: OriMovement
   m_EditorClassIdentifier: 
   movementVelocity: 13.5
   movementLerp: 0.2
@@ -23,19 +23,19 @@ MonoBehaviour:
   airFlipMultiplier: 0.6
   airDragDeceleration: 40
   airMovementAcceleration: 45
-  wallJumpVelocity: 30
-  wallJumpVerticalVelocity: 10
-  wallJumpFallingMultiplier: 1.5
-  wallJumpAngle: {x: 1, y: 3}
-  coyoteTimeSlide: 0.1
-  wallSlideVelocity: 2
+  wallJumpVelocity: 18
+  wallJumpVerticalVelocity: 18
+  wallJumpFallingMultiplier: 2
+  wallJumpAngle: {x: 1, y: 1.5}
+  coyoteTimeSlide: 0.05
+  wallSlideVelocity: 3
   getOfWallTime: 0.5
-  wallClimbVelocity: 3
+  wallClimbVelocity: 5
   startOffset: {x: 0.35, y: 0.95}
   endOffset: {x: 0.4, y: 1}
-  bashVelocity: 33
-  bashTime: 0.15
-  bashImpulse: 5
+  bashVelocity: 30
+  bashTime: 0.1
+  bashImpulse: 1
   bashTimeScale: 0
   bashExitXMultiplier: 0.8
   bashExitYMultiplier: 0.7
