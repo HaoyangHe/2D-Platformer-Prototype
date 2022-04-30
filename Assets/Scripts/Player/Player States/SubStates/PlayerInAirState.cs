@@ -31,7 +31,8 @@ public class PlayerInAirState : PlayerState
 
         canApplyMovement = true;
 
-        if (stateMachine.LastState is PlayerJumpState)
+        if (stateMachine.LastState is PlayerJumpState || 
+            stateMachine.LastState is PlayerWallJumpHorizontalState)
         {
             isJumping = true;
         }
@@ -78,9 +79,13 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
-        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput != 0)))
+        else if (jumpInput && xInput * movementAPI.FacingDirection > 0 && isTouchingWall)
         {
-            stateMachine.ChangeState(player.WallJumpState);
+            stateMachine.ChangeState(player.WallJumpVerticalState);
+        }
+        else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput * movementAPI.FacingDirection < 0)))
+        {
+            stateMachine.ChangeState(player.WallJumpHorizontalState);
         }
         else if (jumpInput && player.JumpState.CanJump())
         {
@@ -116,9 +121,13 @@ public class PlayerInAirState : PlayerState
 
                     movementAPI.AddVelocityX(xInput * playerData.airMovementAcceleration * Time.deltaTime);
 
-                    if (Mathf.Abs(movementAPI.CurrentVelocity.x) > playerData.movementVelocity)
+                    if (stateMachine.LastState is PlayerBashState)
                     {
-                        movementAPI.SetVelocityX(Mathf.Sign(movementAPI.CurrentVelocity.x) * playerData.movementVelocity);
+                        movementAPI.ClampVelocityX(playerData.bashVelocityClamp);
+                    }
+                    else
+                    { 
+                        movementAPI.ClampVelocityX(playerData.movementVelocity);
                     }
                 }
             }
@@ -127,29 +136,29 @@ public class PlayerInAirState : PlayerState
                 if (xInput != 0)
                 {
                     canApplyMovement = true;
-                    // movementAPI.CheckIfShouldFlip(xInput);
                 }
             }
 
             if (movementAPI.CurrentVelocity.y > 0)
             {
-                if (stateMachine.LastState is PlayerBashState)
+                if (stateMachine.LastState is PlayerWallJumpHorizontalState)
                 {
-                    movementAPI.AddVelocityY(Physics2D.gravity.y * (playerData.bashFallingMultiplier - 1) * Time.deltaTime);
+                    movementAPI.GravityScale(playerData.wallJumpUpwardGravityScale);
                 }
-                else if (stateMachine.LastState is PlayerWallJumpState)
-                { 
-                    movementAPI.AddVelocityY(Physics2D.gravity.y * (playerData.wallJumpFallingMultiplier - 1) * Time.deltaTime);
+                else if (stateMachine.LastState is PlayerBashState)
+                {
+                    movementAPI.GravityScale(playerData.bashUpwardGravityScale);
+                }
+                else 
+                {
+                    movementAPI.GravityScale(playerData.airUpwardGravityScale);
                 }
 
-                if (movementAPI.CurrentVelocity.y < 0)
-                {
-                    movementAPI.SetVelocityY(0.0f);
-                }
+                movementAPI.SetVelocityY(movementAPI.CurrentVelocity.y < 0 ? 0 : movementAPI.CurrentVelocity.y);
             }
-            else if (movementAPI.CurrentVelocity.y <= 0)
+            else
             {
-                movementAPI.AddVelocityY(Physics2D.gravity.y * (playerData.fallingMultiplier - 1) * Time.deltaTime);
+                movementAPI.GravityScale(playerData.airFallingGravityScale);
             }
 
             player.Anim.SetFloat("xVelocity", Mathf.Abs(movementAPI.CurrentVelocity.x) >= 0.15f ? 1.0f : 0.0f);

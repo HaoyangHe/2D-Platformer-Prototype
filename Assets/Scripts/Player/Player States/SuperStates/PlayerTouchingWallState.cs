@@ -52,20 +52,24 @@ public class PlayerTouchingWallState : PlayerState
 
         CheckCoyoteTime();
 
-        if (jumpInput && xInput != 0)
-        { 
-            stateMachine.ChangeState(player.WallJumpState);
+        if (jumpInput && xInput * movementAPI.FacingDirection < 0)
+        {
+            stateMachine.ChangeState(player.WallJumpHorizontalState);
         }
         else if (isTouchingWall && !isTouchingLedge && !isGrounded)
         {
             stateMachine.ChangeState(player.LedgeClimbState);
+        }
+        else if (jumpInput && xInput * movementAPI.FacingDirection > 0)
+        {
+            stateMachine.ChangeState(player.WallJumpVerticalState);
         }
         else if (isGrounded && !grabInput)
         {
             stateMachine.ChangeState(player.IdleState);
         }
         else if (!isTouchingWall)
-        { 
+        {
             stateMachine.ChangeState(player.InAirState);
         }
         else if (xInput * movementAPI.FacingDirection < 0)

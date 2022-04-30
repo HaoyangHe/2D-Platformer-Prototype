@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerWallGrabState WallGrabState { get; private set; }
     public PlayerWallClimbState WallClimbState { get; private set; }
-    public PlayerWallJumpState WallJumpState { get; private set; }
+    public PlayerWallJumpVerticalState WallJumpVerticalState { get; private set; }
+    public PlayerWallJumpHorizontalState WallJumpHorizontalState { get; private set; }
     public PlayerLedgeClimbState LedgeClimbState { get; private set; }
     public PlayerBashState BashState { get; private set; }
     #endregion
@@ -46,7 +47,8 @@ public class Player : MonoBehaviour
         WallSlideState = new PlayerWallSlideState(this, "wallSlide");
         WallGrabState = new PlayerWallGrabState(this, "wallGrab");
         WallClimbState = new PlayerWallClimbState(this, "wallClimb");
-        WallJumpState = new PlayerWallJumpState(this, "inAir");
+        WallJumpVerticalState = new PlayerWallJumpVerticalState(this, "inAir");
+        WallJumpHorizontalState = new PlayerWallJumpHorizontalState(this, "inAir");
         LedgeClimbState = new PlayerLedgeClimbState(this, "ledgeClimbState");
         BashState = new PlayerBashState(this, "inAir");
 

@@ -67,6 +67,14 @@ public class Movement : CoreComponent
         SetFinalVelocity();
     }
 
+    public void ClampVelocityX(float velocityClamp)
+    {
+        if (Mathf.Abs(CurrentVelocity.x) > velocityClamp)
+        {
+            SetVelocityX(Mathf.Sign(CurrentVelocity.x) * velocityClamp);
+        }
+    }
+
     public void SetVelocityY(float velocity)
     {
         workspace.Set(CurrentVelocity.x, velocity);
@@ -83,6 +91,11 @@ public class Movement : CoreComponent
     {
         workspace.Set(CurrentVelocity.x, CurrentVelocity.y - velocity);
         SetFinalVelocity();
+    }
+
+    public void GravityScale(float gravityScale)
+    {
+        AddVelocityY(Physics2D.gravity.y * (gravityScale - 1) * Time.deltaTime);
     }
 
     public void AddForce(Vector2 forceToAdd)

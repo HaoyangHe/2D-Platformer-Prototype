@@ -73,9 +73,9 @@ public class PlayerLedgeClimbState : PlayerState
                 movementAPI.CheckIfShouldFlip(xInput);
                 stateMachine.ChangeState(player.InAirState);
             }
-            else if (jumpInput && !isClimbing)
+            else if (jumpInput && xInput != movementAPI.FacingDirection && !isClimbing)
             {
-                stateMachine.ChangeState(player.WallJumpState);
+                stateMachine.ChangeState(player.WallJumpHorizontalState);
             }
         }
     }

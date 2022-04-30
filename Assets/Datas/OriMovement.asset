@@ -12,31 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f4d30f8cfed1848ba5a92697f1c2a2, type: 3}
   m_Name: OriMovement
   m_EditorClassIdentifier: 
-  movementVelocity: 13.5
+  airUpwardGravityScale: 4.8
+  airFallingGravityScale: 5.3
+  bashUpwardGravityScale: 5
+  wallJumpUpwardGravityScale: 3
+  wallJumpVerticalGravitiScale: 10
+  movementVelocity: 14.5
   movementLerp: 0.2
   jumpVelocity: 17
   amountOfJumps: 2
   coyoteTimeInAir: 0.2
   variableJumpHeightMultiplier: 0.5
-  abilityInterruptMultiplier: 0.35
-  fallingMultiplier: 2.8
-  airFlipMultiplier: 0.6
+  airFlipMultiplier: 0.65
   airDragDeceleration: 40
-  airMovementAcceleration: 45
+  airMovementAcceleration: 40
+  bashVelocityClamp: 20
   wallJumpVelocity: 18
-  wallJumpVerticalVelocity: 18
-  wallJumpFallingMultiplier: 2
   wallJumpAngle: {x: 1, y: 1.5}
-  coyoteTimeSlide: 0.05
-  wallSlideVelocity: 3
+  wallJumpUpwardVelocity: 25
+  wallSlideVelocity: 8.5
+  wallSlideAcceleration: 4.5
   getOfWallTime: 0.5
+  coyoteTimeSlide: 0.05
   wallClimbVelocity: 5
   startOffset: {x: 0.35, y: 0.95}
   endOffset: {x: 0.4, y: 1}
-  bashVelocity: 30
-  bashTime: 0.1
+  bashVelocity: 40
+  bashTime: 0.08
   bashImpulse: 1
   bashTimeScale: 0
-  bashExitXMultiplier: 0.8
-  bashExitYMultiplier: 0.7
-  bashFallingMultiplier: 6
+  bashExitXMultiplier: 0.6
+  bashExitYMultiplier: 0.5

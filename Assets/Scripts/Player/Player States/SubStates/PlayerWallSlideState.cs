@@ -13,7 +13,12 @@ public class PlayerWallSlideState : PlayerTouchingWallState
 
         if (!isExitingState)
         {
-            movementAPI.SetVelocityY(-playerData.wallSlideVelocity);
+            movementAPI.GravityScale(playerData.wallSlideAcceleration);
+
+            if (movementAPI.CurrentVelocity.y < -playerData.wallSlideVelocity)
+            {
+                movementAPI.SetVelocityY(-playerData.wallSlideVelocity);
+            }
 
             if (grabInput && yInput == 0)
             {

@@ -1,16 +1,13 @@
 using UnityEngine;
 
-public class PlayerWallJumpState : PlayerAbilityState
+public class PlayerWallJumpHorizontalState : PlayerAbilityState
 {
-    // Player Inputs
-    private int xInput;
-    
     // Collision Senses
     private bool isTouchingWall;
 
     private int wallJumpDirection;
     
-    public PlayerWallJumpState(Player playerInstance, string animationBoolName)
+    public PlayerWallJumpHorizontalState(Player playerInstance, string animationBoolName)
         : base(playerInstance, animationBoolName)
     {
     }
@@ -20,18 +17,10 @@ public class PlayerWallJumpState : PlayerAbilityState
         base.Enter();
 
         player.InputHandler.UseJumpInput();
-        xInput = player.InputHandler.NormInputX;
 
-        if ((xInput * movementAPI.FacingDirection < 0 && isTouchingWall) || !isTouchingWall)
-        {
-            DetermineWallJumpDirection(isTouchingWall);
-            movementAPI.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
-            movementAPI.CheckIfShouldFlip(wallJumpDirection);
-        }
-        else if (movementAPI.CurrentVelocity.y <= 0)
-        {
-            movementAPI.SetVelocityY(playerData.wallJumpVerticalVelocity);
-        }
+        DetermineWallJumpDirection(isTouchingWall);
+        movementAPI.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
+        movementAPI.CheckIfShouldFlip(wallJumpDirection);
 
         player.JumpState.ResetAmountOfJumpsLeft();
         player.JumpState.DecreaseAmountOfJumpsLeft();
