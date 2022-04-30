@@ -15,7 +15,8 @@ public class PlayerData : ScriptableObject
     public float movementLerp = 1.0f;
 
     [Header("Jump State")]
-    public float jumpVelocity = 16.0f;
+    public float jumpVelocityNo1 = 17.0f;
+    public float jumpVelocityNo2 = 8.5f;
     public int amountOfJumps = 1;
 
     [Header("In Air State")]

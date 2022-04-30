@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: OriMovement
   m_EditorClassIdentifier: 
   airUpwardGravityScale: 4.8
-  airFallingGravityScale: 5.3
-  bashUpwardGravityScale: 5
-  wallJumpUpwardGravityScale: 3
+  airFallingGravityScale: 4.2
+  bashUpwardGravityScale: 5.5
+  wallJumpUpwardGravityScale: 3.2
   wallJumpVerticalGravitiScale: 10
-  movementVelocity: 14.5
+  movementVelocity: 12.5
   movementLerp: 0.2
-  jumpVelocity: 17
+  jumpVelocityNo1: 16
+  jumpVelocityNo2: 12
   amountOfJumps: 2
   coyoteTimeInAir: 0.2
   variableJumpHeightMultiplier: 0.5
@@ -27,11 +28,11 @@ MonoBehaviour:
   airDragDeceleration: 40
   airMovementAcceleration: 40
   bashVelocityClamp: 20
-  wallJumpVelocity: 18
-  wallJumpAngle: {x: 1, y: 1.5}
+  wallJumpVelocity: 13
+  wallJumpAngle: {x: 1, y: 2}
   wallJumpUpwardVelocity: 25
-  wallSlideVelocity: 8.5
-  wallSlideAcceleration: 4.5
+  wallSlideVelocity: 6
+  wallSlideAcceleration: 3.5
   getOfWallTime: 0.5
   coyoteTimeSlide: 0.05
   wallClimbVelocity: 5
@@ -41,5 +42,5 @@ MonoBehaviour:
   bashTime: 0.08
   bashImpulse: 1
   bashTimeScale: 0
-  bashExitXMultiplier: 0.6
+  bashExitXMultiplier: 0.55
   bashExitYMultiplier: 0.5

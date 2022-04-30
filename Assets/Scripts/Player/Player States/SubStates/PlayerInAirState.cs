@@ -19,6 +19,7 @@ public class PlayerInAirState : PlayerState
     private bool coyoteTime;
     private bool isJumping;
     private bool canApplyMovement;
+    private bool canApplyXDrag;
 
     public PlayerInAirState(Player playerInstance, string animationBoolName) 
         : base(playerInstance, animationBoolName)
@@ -31,18 +32,22 @@ public class PlayerInAirState : PlayerState
 
         canApplyMovement = true;
 
-        if (stateMachine.LastState is PlayerJumpState || 
-            stateMachine.LastState is PlayerWallJumpHorizontalState)
+        if ((stateMachine.LastState is PlayerJumpState || 
+            stateMachine.LastState is PlayerWallJumpHorizontalState) && 
+            player.JumpState.amountOfJumpsLeft == playerData.amountOfJumps - 1)
         {
             isJumping = true;
+            canApplyXDrag = true;
         }
         else if (stateMachine.LastState is PlayerGroundedState)
         {
             coyoteTime = true;
+            canApplyXDrag = true;
         }
         else if (stateMachine.LastState is PlayerBashState)
         {
             canApplyMovement = false;
+            canApplyXDrag = false;
         }
     }
 
@@ -107,7 +112,7 @@ public class PlayerInAirState : PlayerState
         {
             if (canApplyMovement)
             {
-                if (xInput == 0)
+                if (xInput == 0 && canApplyXDrag)
                 {
                     movementAPI.DecreaseVelocityX(Mathf.Sign(movementAPI.CurrentVelocity.x) * 
                                                   playerData.airDragDeceleration * Time.deltaTime);
@@ -131,12 +136,11 @@ public class PlayerInAirState : PlayerState
                     }
                 }
             }
-            else
+
+            if (xInput != 0)
             {
-                if (xInput != 0)
-                {
-                    canApplyMovement = true;
-                }
+                canApplyMovement = true;
+                canApplyXDrag = true;
             }
 
             if (movementAPI.CurrentVelocity.y > 0)

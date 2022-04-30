@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerJumpState : PlayerAbilityState
 {
-    private int amountOfJumpsLeft;
+    public int amountOfJumpsLeft { get; private set; }
 
     public PlayerJumpState(Player playerInstance, string animationBoolName)
         : base(playerInstance, animationBoolName)
@@ -16,7 +16,15 @@ public class PlayerJumpState : PlayerAbilityState
 
         player.InputHandler.UseJumpInput();
 
-        movementAPI.SetVelocityY(playerData.jumpVelocity);
+        if (amountOfJumpsLeft == playerData.amountOfJumps)
+        {
+            movementAPI.SetVelocityY(playerData.jumpVelocityNo1);
+        }
+        else
+        {
+            movementAPI.SetVelocityY(playerData.jumpVelocityNo2);
+        }
+
         amountOfJumpsLeft--;
         isAbilityDone = true;
     }
