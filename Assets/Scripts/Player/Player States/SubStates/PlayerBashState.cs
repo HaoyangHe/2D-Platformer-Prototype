@@ -36,7 +36,6 @@ public class PlayerBashState : PlayerAbilityState
     {
         base.Exit();
 
-        GameObject.Find("a").transform.position = player.transform.position;
         movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.bashExitXMultiplier);
 
         if (movementAPI.CurrentVelocity.y > 0)

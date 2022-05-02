@@ -22,7 +22,7 @@ public class BashableRope : MonoBehaviour, BashableObjectOwner
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        bashableObject = transform.Find("BashableObject").GetComponent<BashableObject>();
+        bashableObject = transform.Find("BashableObject").GetComponentInChildren<BashableObject>();
         
         Vector3 ropeStartPoint = transform.position;
         for (int i = 0; i < segmentLength; i++)

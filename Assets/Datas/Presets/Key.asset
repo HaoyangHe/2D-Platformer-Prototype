@@ -14,5 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: InventoryItem_Preset_Key
   itemName: Key
-  icon: {fileID: 3384410005311292360, guid: 3a586eed816506f4cba4349f055e4be7, type: 3}
-  prefab: {fileID: 5310437171584865428, guid: 19f11db453254f14683db7938e4b3ae4, type: 3}
+  icon: {fileID: -351975951711166042, guid: 650fd5e94e233ff43857899e41e7d9b2, type: 3}

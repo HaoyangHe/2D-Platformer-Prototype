@@ -10,6 +10,9 @@ public class BashableBridge : MonoBehaviour, BashableObjectOwner
     [SerializeField] private Transform startPoint;
     [SerializeField] private Transform endPoint;
 
+    [Range(0, 1)]
+    [SerializeField] private float bashablePoint = 0.5f;
+
     [SerializeField] private int precise = 100;
     [SerializeField] private int segmentLength = 35;
     [SerializeField] private float lineWidth = 0.1f;
@@ -28,7 +31,7 @@ public class BashableBridge : MonoBehaviour, BashableObjectOwner
         lineRenderer = GetComponent<LineRenderer>();
         bashableObject = transform.Find("BashableObject").GetComponent<BashableObject>();
         
-        bashableObjectIndex = segmentLength / 2;
+        bashableObjectIndex = (int)(segmentLength * bashablePoint);
 
         Vector3 ropeStartPoint = startPoint.position;
         for (int i = 0; i < segmentLength; i++)

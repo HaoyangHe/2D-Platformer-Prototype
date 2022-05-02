@@ -18,8 +18,11 @@ public class PlayerInAirState : PlayerState
     
     private bool coyoteTime;
     private bool isJumping;
+
+    // Movement States Triggers
     private bool canApplyMovement;
     private bool canApplyXDrag;
+    private bool canApplyBashClamp;
 
     public PlayerInAirState(Player playerInstance, string animationBoolName) 
         : base(playerInstance, animationBoolName)
@@ -31,6 +34,7 @@ public class PlayerInAirState : PlayerState
         base.Enter();
 
         canApplyMovement = true;
+        canApplyBashClamp = false;
 
         if ((stateMachine.LastState is PlayerJumpState || 
             stateMachine.LastState is PlayerWallJumpHorizontalState) && 
@@ -80,7 +84,7 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.LandState);
         }
-        else if (isTouchingWall && !isTouchingLedge && !isGrounded)
+        else if (isTouchingWall && !isTouchingLedge && !isGrounded && !isTouchingWallBack)
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
@@ -96,11 +100,11 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.JumpState);
         }
-        else if (isTouchingWall && isTouchingLedge && grabInput)
+        else if (isTouchingWall && isTouchingLedge && grabInput && !isTouchingWallBack)
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
-        else if (isTouchingWall && movementAPI.CurrentVelocity.y < -0.01f)
+        else if (isTouchingWall && movementAPI.CurrentVelocity.y < -0.01f && !isTouchingWallBack)
         {
             stateMachine.ChangeState(player.WallSlideState);
         }
@@ -126,7 +130,7 @@ public class PlayerInAirState : PlayerState
 
                     movementAPI.AddVelocityX(xInput * playerData.airMovementAcceleration * Time.deltaTime);
 
-                    if (stateMachine.LastState is PlayerBashState)
+                    if (canApplyBashClamp)
                     {
                         movementAPI.ClampVelocityX(playerData.bashVelocityClamp);
                     }
@@ -139,6 +143,11 @@ public class PlayerInAirState : PlayerState
 
             if (xInput != 0)
             {
+                if (!canApplyMovement && Mathf.Abs(movementAPI.CurrentVelocity.x) >= playerData.movementVelocity) 
+                { 
+                    canApplyBashClamp = true;
+                }
+
                 canApplyMovement = true;
                 canApplyXDrag = true;
             }

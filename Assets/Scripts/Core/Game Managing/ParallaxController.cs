@@ -15,7 +15,7 @@ public class ParallaxController : MonoBehaviour
         parallaxLayers = transform.GetComponentsInChildren<ParallaxLayer>();
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (camTransform.position.x != oldCameraPosition.x || camTransform.position.y != oldCameraPosition.y)
         {

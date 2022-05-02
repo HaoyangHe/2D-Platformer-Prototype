@@ -27,7 +27,7 @@ MonoBehaviour:
   airFlipMultiplier: 0.65
   airDragDeceleration: 40
   airMovementAcceleration: 40
-  bashVelocityClamp: 20
+  bashVelocityClamp: 16
   wallJumpVelocity: 13
   wallJumpAngle: {x: 1, y: 2}
   wallJumpUpwardVelocity: 25
@@ -40,7 +40,7 @@ MonoBehaviour:
   endOffset: {x: 0.4, y: 1}
   bashVelocity: 40
   bashTime: 0.08
-  bashImpulse: 1
+  bashImpulse: 1.5
   bashTimeScale: 0
-  bashExitXMultiplier: 0.55
+  bashExitXMultiplier: 0.58
   bashExitYMultiplier: 0.5
