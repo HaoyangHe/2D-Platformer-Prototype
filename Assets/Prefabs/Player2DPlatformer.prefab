@@ -97,7 +97,7 @@ MonoBehaviour:
   bashCheckRadius: 2
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
   whatIsInteractable:
     serializedVersion: 2
     m_Bits: 128
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 1451514704158049453}
   - component: {fileID: 1451514704158049455}
   - component: {fileID: 1451514704158049454}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player2DPlatformer
   m_TagString: Player
   m_Icon: {fileID: 0}

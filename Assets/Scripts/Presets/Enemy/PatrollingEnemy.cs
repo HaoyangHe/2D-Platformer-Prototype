@@ -12,13 +12,15 @@ public class PatrollingEnemy : PhysicsObject
     [SerializeField] private LayerMask whatIsGround;
 
     private RaycastHit2D ledgeRaycastHit;
-    private RaycastHit2D wallRaycastHit;
+    private RaycastHit2D[] wallRaycastHits;
     private Vector2 ledgeRayStartPos;
     private int facingDirection = 1;
     private int health;
 
-    private void Start() 
+    protected override void Start() 
     {
+        base.Start();
+        
         health = maxHP;
     }
 
@@ -26,9 +28,9 @@ public class PatrollingEnemy : PhysicsObject
     {
         ledgeRayStartPos.Set(transform.position.x + facingDirection * ledgeRayCastOffset.x, transform.position.y + ledgeRayCastOffset.y);
         ledgeRaycastHit = Physics2D.Raycast(ledgeRayStartPos, Vector2.down, rayCastLength, whatIsGround);
-        wallRaycastHit = Physics2D.Raycast((Vector2)transform.position, facingDirection * Vector2.right, rayCastLength, whatIsGround);
-        
-        if (!ledgeRaycastHit || wallRaycastHit)
+        wallRaycastHits = Physics2D.RaycastAll((Vector2)transform.position, facingDirection * Vector2.right, rayCastLength, whatIsGround);
+
+        if (!ledgeRaycastHit || wallRaycastHits.Length > 1)
         {
             Flip();
         }
@@ -44,6 +46,14 @@ public class PatrollingEnemy : PhysicsObject
     private void OnCollisionEnter2D(Collision2D other) 
     {
         if (other.gameObject == GameManager.Instance.player.gameObject)
+        {
+            GameManager.Instance.player.callbacks.Damage(attackPower);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject == GameManager.Instance.player.gameObject)
         {
             GameManager.Instance.player.callbacks.Damage(attackPower);
         }

@@ -5,24 +5,28 @@ using UnityEngine;
 public class BashableObjectImp : MonoBehaviour, BashableObject
 {
     [SerializeField] private float objectMass = 1.0f;
-    
+    [SerializeField] private Color colorLit = Color.yellow;
+
     public Transform Transform { get; set; }
     public float Mass { get; set;}
+
+    private Color originColor;
 
     private void Awake() 
     {
         Transform = this.transform;  
-        Mass = objectMass;  
+        Mass = objectMass;
+        originColor = GetComponent<SpriteRenderer>().color;
     }
     
     public void Lit()
     {
-        transform.gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+        transform.gameObject.GetComponent<SpriteRenderer>().color = colorLit;
     }
     
     public void Unlit()
     {
-        transform.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        transform.gameObject.GetComponent<SpriteRenderer>().color = originColor;
     }
 
     public void BeforeBash()

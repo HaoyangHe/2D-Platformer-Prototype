@@ -56,12 +56,13 @@ public class CollisionSenses : CoreComponent
             if (obj == null)
             {
                 BashAbleObj?.Unlit();
+                BashAbleObj = null;
                 return false;
             }
             else
             {
                 BashAbleObj = obj.GetComponent<BashableObject>();
-                BashAbleObj.Lit();
+                BashAbleObj?.Lit();
                 return true;
             }
         }

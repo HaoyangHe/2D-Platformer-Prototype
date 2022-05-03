@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class PlayerInputHandler : MonoBehaviour
 {
     private PlayerInput playerInput;
-    private Camera cam;
 
     public Vector2 RawMovementInput { get; private set; }
     public Vector2 RawBashDirecionInput { get; private set; }
@@ -36,7 +35,6 @@ public class PlayerInputHandler : MonoBehaviour
     private void Start() 
     {
         playerInput = GetComponent<PlayerInput>();
-        cam = Camera.main;
 
         RawBashDirecionInput.Set(1, 1);
     }
@@ -121,7 +119,7 @@ public class PlayerInputHandler : MonoBehaviour
         
         if (playerInput.currentControlScheme == "Keyboard")
         {
-            workSpace = workSpace - (Vector2)cam.WorldToScreenPoint(BashDirectionIndicator.position);
+            workSpace = workSpace - (Vector2)Camera.main.WorldToScreenPoint(BashDirectionIndicator.position);
         }
 
         RawBashDirecionInput = workSpace == Vector2.zero ? RawBashDirecionInput : workSpace;
