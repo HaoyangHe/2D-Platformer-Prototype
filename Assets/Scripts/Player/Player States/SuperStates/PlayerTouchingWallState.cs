@@ -26,6 +26,7 @@ public class PlayerTouchingWallState : PlayerState
     {
         base.Enter();
 
+        player.InputHandler.UseJumpInput();             // Cancel all the JumpInputs before touching the wall.
         player.JumpState.ResetAmountOfJumpsLeft();
 
         if (stateMachine.LastState is PlayerInAirState && stateMachine.CurrentState is PlayerWallSlideState)

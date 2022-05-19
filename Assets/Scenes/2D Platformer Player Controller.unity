@@ -1060,7 +1060,7 @@ TrailRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -827934751
   m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Time: 5
   m_Parameters:
     serializedVersion: 3

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public UIController uIController;
     public EventSystem eventSystem;
     public InventorySystem inventorySystem;
+    public AudioManager audioManager;
     public PresetPlayer player;
     
     private static GameManager instance;
@@ -40,6 +41,11 @@ public class GameManager : MonoBehaviour
         if (inventorySystem == null && FindObjectOfType<InventorySystem>())
         {
             inventorySystem = FindObjectOfType<InventorySystem>();
+        }
+
+        if (audioManager == null && FindObjectOfType<AudioManager>())
+        {
+            audioManager = FindObjectOfType<AudioManager>();
         }
 
         if (player == null && FindObjectOfType<PresetPlayer>())

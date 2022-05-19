@@ -20,7 +20,7 @@ MonoBehaviour:
   movementVelocity: 12.5
   movementLerp: 0.2
   jumpVelocityNo1: 16
-  jumpVelocityNo2: 12
+  jumpVelocityNo2: 12.5
   amountOfJumps: 2
   coyoteTimeInAir: 0.2
   variableJumpHeightMultiplier: 0.5
@@ -30,7 +30,7 @@ MonoBehaviour:
   bashVelocityClamp: 16
   wallJumpVelocity: 13
   wallJumpAngle: {x: 1, y: 2}
-  wallJumpUpwardVelocity: 25
+  wallJumpUpwardVelocity: 22
   wallSlideVelocity: 6
   wallSlideAcceleration: 3.5
   getOfWallTime: 0.5
@@ -40,7 +40,7 @@ MonoBehaviour:
   endOffset: {x: 0.4, y: 1}
   bashVelocity: 40
   bashTime: 0.08
-  bashImpulse: 1.5
+  bashImpulse: 3
   bashTimeScale: 0
   bashExitXMultiplier: 0.58
   bashExitYMultiplier: 0.5

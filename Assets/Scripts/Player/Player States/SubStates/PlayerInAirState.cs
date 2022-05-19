@@ -88,10 +88,6 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.LedgeClimbState);
         }
-        else if (jumpInput && xInput * movementAPI.FacingDirection > 0 && isTouchingWall)
-        {
-            stateMachine.ChangeState(player.WallJumpVerticalState);
-        }
         else if (jumpInput && (isTouchingWallBack || (isTouchingWall && xInput * movementAPI.FacingDirection < 0)))
         {
             stateMachine.ChangeState(player.WallJumpHorizontalState);
@@ -121,7 +117,7 @@ public class PlayerInAirState : PlayerState
                     movementAPI.DecreaseVelocityX(Mathf.Sign(movementAPI.CurrentVelocity.x) * 
                                                   playerData.airDragDeceleration * Time.deltaTime);
                 }
-                else
+                else if (xInput != 0)
                 {
                     if (movementAPI.CheckIfShouldFlip(xInput))
                     {
@@ -135,7 +131,7 @@ public class PlayerInAirState : PlayerState
                         movementAPI.ClampVelocityX(playerData.bashVelocityClamp);
                     }
                     else
-                    { 
+                    {
                         movementAPI.ClampVelocityX(playerData.movementVelocity);
                     }
                 }
