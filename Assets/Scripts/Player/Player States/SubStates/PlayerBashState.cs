@@ -4,6 +4,7 @@ public class PlayerBashState : PlayerAbilityState
 {
     // Player Inputs
     private int xInput;
+    private bool jumpInput;
     private bool bashInputStop;
     private Vector2 bashDirection;
 
@@ -84,9 +85,16 @@ public class PlayerBashState : PlayerAbilityState
             }
             else 
             {
+                jumpInput = player.InputHandler.JumpInput;
+
                 movementAPI.SetVelocity(playerData.bashVelocity, bashDirection);
+
+                if (jumpInput)
+                { 
+                    movementAPI.SetVelocityX(movementAPI.CurrentVelocity.x * playerData.bashjumpInterruptMultiplier);
+                }
                 
-                if (Time.time > startTime + playerData.bashTime)
+                if (Time.time > startTime + playerData.bashTime || jumpInput)
                 { 
                     isAbilityDone = true;
                 }

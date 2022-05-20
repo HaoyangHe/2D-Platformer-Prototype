@@ -178,8 +178,6 @@ public class PlayerInAirState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-
-
     }
 
     public override void DoChecks()

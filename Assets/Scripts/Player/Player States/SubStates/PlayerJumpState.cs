@@ -19,14 +19,14 @@ public class PlayerJumpState : PlayerAbilityState
         if (amountOfJumpsLeft == playerData.amountOfJumps)
         {
             movementAPI.SetVelocityY(playerData.jumpVelocityNo1);
+            isAbilityDone = true;
         }
         else
         {
-            movementAPI.SetVelocityY(playerData.jumpVelocityNo2);
+            stateMachine.ChangeState(player.JumpStateDouble);
         }
 
-        amountOfJumpsLeft--;
-        isAbilityDone = true;
+        DecreaseAmountOfJumpsLeft();
     }
 
     public bool CanJump()

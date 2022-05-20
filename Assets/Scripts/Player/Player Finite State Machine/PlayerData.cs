@@ -56,4 +56,5 @@ public class PlayerData : ScriptableObject
     public float bashTimeScale = 0.0f;
     public float bashExitXMultiplier = 0.6f;
     public float bashExitYMultiplier = 0.5f;
+    public float bashjumpInterruptMultiplier = 0.8f;
 }

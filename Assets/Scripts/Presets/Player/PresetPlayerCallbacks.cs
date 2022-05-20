@@ -15,6 +15,7 @@ public class PresetPlayerCallbacks : MonoBehaviour, PlayerCallbacks
         GameManager.Instance.eventSystem.onPresetItemCoinPickUp += AddCoin;
         GameManager.Instance.eventSystem.onPresetItemHealthPickUp += AddHealth;
         GameManager.Instance.eventSystem.onPresetItemKeyPickUp += PickUpKey;
+        GameManager.Instance.eventSystem.onPresetPlayerDying += PlayerDying;
         GameManager.Instance.eventSystem.onSceneBegin += OnSceneBegin;
         GameManager.Instance.eventSystem.onSceneEnding += OnSceneEnding;
     }
@@ -25,6 +26,7 @@ public class PresetPlayerCallbacks : MonoBehaviour, PlayerCallbacks
         GameManager.Instance.eventSystem.onPresetItemCoinPickUp -= AddCoin;
         GameManager.Instance.eventSystem.onPresetItemHealthPickUp -= AddHealth;
         GameManager.Instance.eventSystem.onPresetItemKeyPickUp -= PickUpKey;
+        GameManager.Instance.eventSystem.onPresetPlayerDying -= PlayerDying;
         GameManager.Instance.eventSystem.onSceneBegin -= OnSceneBegin;
         GameManager.Instance.eventSystem.onSceneEnding -= OnSceneEnding;
     }
@@ -57,7 +59,7 @@ public class PresetPlayerCallbacks : MonoBehaviour, PlayerCallbacks
     {
         GameManager.Instance.uIController.SetSprite(item);
     }
-
+    
     public void Damage(int value = 10)
     {
         player.healthPoint = Mathf.Clamp(player.healthPoint - value, 0, player.maxHP);
@@ -65,8 +67,12 @@ public class PresetPlayerCallbacks : MonoBehaviour, PlayerCallbacks
 
         if (player.healthPoint == 0)
         {
-            player.LoadAttributes();
             GameManager.Instance.eventSystem.PresetPlayerDyingTrigger();
         }
+    }
+
+    public void PlayerDying()
+    {
+        player.LoadAttributes();
     }
 }

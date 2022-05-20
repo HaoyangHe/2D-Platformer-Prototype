@@ -44,3 +44,4 @@ MonoBehaviour:
   bashTimeScale: 0
   bashExitXMultiplier: 0.58
   bashExitYMultiplier: 0.5
+  bashjumpInterruptMultiplier: 0.68
